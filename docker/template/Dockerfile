@@ -1,4 +1,4 @@
-FROM debian:8
+FROM debian:8 #CHANGE AS PER YOUR CUSTOM DOCKER
 MAINTAINER Lucas van Staden "lucas@vanstaden.com.au"
 
 RUN useradd -G www-data --create-home --shell /bin/bash vagrant
@@ -13,17 +13,13 @@ RUN chmod 0600 /home/vagrant/.ssh/*
 RUN chmod 0700 /home/vagrant/.ssh
 
 
-ADD http://dev.mysql.com/get/mysql-apt-config_0.3.5-1debian8_all.deb /tmp/mysql-apt-config.deb
-RUN DEBIAN_FRONTEND=noninteractive dpkg -i /tmp/mysql-apt-config.deb
+################### place here your dockers package installs
 
-ADD common/mysql_apt /etc/apt/sources.list.d/mysql.list
 
-RUN apt-get update \
-     && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential automake checkinstall openssh-server supervisor sudo \
-     apache2 wget curl net-tools iptables authbind mysql-server-5.6 \
-     git ssh bash php5 php5-cli php5-mysql php5-curl php5-gd pv rubygems ruby-compass\
-     php5-mcrypt php5-xdebug php5-intl php5-xsl unzip bzip2 pwgen joe vim ant dos2unix cron ruby-dev pv \
-     && apt-get clean
+
+
+####################
+
 
 RUN gem install ffi -v '1.9.8'
 RUN gem install bundler

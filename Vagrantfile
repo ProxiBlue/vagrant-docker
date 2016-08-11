@@ -63,6 +63,8 @@ opts.each do |opt, arg|
       ENV['VAGRANT_DEFAULT_PROVIDER']=arg
     when '--bindports'
       bindPorts=true
+    when '--webserver'
+      webserver=arg
   end
 end
 
@@ -134,9 +136,9 @@ Vagrant.configure('2') do |config|
     config.vm.provision "shell", path: "provision/provision.sh", privileged: true
 
     if File.exist?("provision/custom/#{name}.sh")
-            config.vm.provision "shell", path: "provision/custom/#{name}.sh", privileged: true, args: "#{mage_version}"
+            config.vm.provision "shell", path: "provision/custom/#{name}.sh", privileged: true
     else
-            config.vm.provision "shell", path: "provision/generic.sh", privileged: false, args: "#{mage_version}"
+            config.vm.provision "shell", path: "provision/generic.sh", privileged: false
     end
 
     if File.exist?("provision/start-#{name}-web.sh")

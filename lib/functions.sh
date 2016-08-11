@@ -1,4 +1,7 @@
 #!/bin/bash
+# I have no idea why this exists.
+# I think I created it as a workaround for the virtualbox guest and mysql not starting up
+# need to re-assess if still needed
 
 startmysql() {
     sudo /usr/bin/mysqld_safe > /dev/null 2>&1 &

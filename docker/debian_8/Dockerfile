@@ -7,7 +7,6 @@ RUN echo vagrant:vagrant | chpasswd
 RUN mkdir /home/vagrant/.composer
 ADD https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub \
     /home/vagrant/.ssh/authorized_keys
-#ADD common/auth.json /home/vagrant/.composer/auth.json
 RUN chown -R vagrant:vagrant /home/vagrant/.ssh
 RUN chown -R vagrant:vagrant /home/vagrant/.composer
 RUN chmod 0600 /home/vagrant/.ssh/*
@@ -45,8 +44,6 @@ RUN chmod 755 /*.sh
 ADD common/xdebug.ini /etc/php5/mods-available/xdebug.ini
 ADD common/supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.conf
 ADD common/supervisord-sshd.conf /etc/supervisor/conf.d/supervisord-sshd.conf
-
-# Add MySQL users and `database`
 RUN chmod 755 /*.sh /sbin/shutdown
 RUN mkdir /var/run/sshd
 EXPOSE 22 80 3306 9000
