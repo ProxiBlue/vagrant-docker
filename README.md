@@ -11,9 +11,10 @@ My want was simple:
 * Create a folder, and place given site code therein.
 * Bring that up as a virtual machine.
 * Try and make it generic enough to easily prototype test boxes or debug on client code base/database given.
-* allow quick testing of coe in various PHP versions
+* allow quick testing of code in various PHP versions / environments
+* I did not need anything fancy like REDIS boxes etc, but they can easily be used in the setup.
 
-So I looked at Vagrant, and since the Vagrant commands are simply just a ruby script, and adjusted to my needs.
+So I looked at Vagrant, and since the Vagrant commands file is simply just a ruby script, I adjusted to my needs.
 
 Requirements
 =============
