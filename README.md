@@ -116,7 +116,7 @@ You can easily test the same codebase in different versions of PHP/MYSQL/APACHE 
 
 example:
 
-ln -s ./<FOLDER> ./<NEW_NAME>
+```ln -s ./<FOLDER> ./<NEW_NAME>```
 
 you can then bring up a second box, using the linked source folder, but designate a different basebox (default is DEBAIN_8)
 
