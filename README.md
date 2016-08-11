@@ -104,7 +104,7 @@ Quick Start Guide
 * cd into the cloned folder: ```cd vagrant-docker```
 * cd into the ```machines``` folder: ```cd machines```
 * create a new folder. This will be the web root folder with your site code.
-* cd back to the base volder 'vagrabt-docker'. NOTE: for all vagrant commands, you need to be at this folder level.
+* cd back to the base folder 'vagrant-docker'. NOTE: for all vagrant commands, you need to be at this folder level.
 * bring up the virtual box : ```vagrant --name=<FOLDER NAME> up```
 
 You will now see the guest booting up. The initial boot may be the slowest as the docker host needs to be built.
@@ -147,7 +147,7 @@ https://gist.github.com/ProxiBlue/dfc74f35721b57e96b560d898cb6bfeb
 Some other things you can do
 ============================
 
-If a box (folder) requires some specific setup to run when they get provisioned, you can create a file called <FOLDER>.sh within the /provision folder.
+If a box (folder) requires some specific setup to run when they get provisioned, you can create a file called ```<FOLDER>.sh``` within the /provision folder.
 When a box with that folder name is provisioned (either by an initial startup, or by invoking --provision on a stopped box), the given shell script will be invoked as a final step.
 If no such file exists, generic.sh will run.
 
