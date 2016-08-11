@@ -1,11 +1,14 @@
 # vagrant-docker
 
-My custom vagrant development environment, allowing quick dev boxes to be created, based on folder(s) of code
+My custom vagrant development environment, allowing quick dev boxes to be created, based on folder(s) of code.
 
-After a couple of months running proxiBlue, I realised that I need to adapt my dev environment, and virtualize.
+After a couple of months running ProxiBlue, I realised that I need to adapt my dev environment, and virtualize.
+
+I often get codebase zips and db dumps from clients, to debug a specifc issue on their site, specific to their setup.
+
 My want was simple:
 
-* Create a folder, and place site code therein.
+* Create a folder, and place given site code therein.
 * Bring that up as a virtual machine.
 * Try and make it generic enough to easily prototype test boxes or debug on client code base/database given.
 * allow quick testing of coe in various PHP versions
@@ -57,8 +60,8 @@ docker0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 ```
 
--domain=".local.com" = your lcoal domain used. The folder will become the hostname. so you end up with FOLDER.local.com as the url to use.
--nameserver="8.8.8.8:53" = the fallback dns to use. without this you will not be able to get any other dns lookups working
+-domain=".local.com" = your local domain used. The folder will become the hostname. so you end up with ```FOLDER.local.com``` as the url to use.
+-nameserver="8.8.8.8:53" = the fallback DNS to use. Without this you will not be able to get any other DNS lookups working. Change to your corporate internal DNS server if exist.
 
 Next, setup your local machine to use the docker0 interface as its DNS server.
 You need to adjust how depending on what OS your host is.
@@ -78,6 +81,7 @@ Again, you need to adjust per your host OS:
 ExecStart=
 ExecStart=/usr/bin/docker daemon --bip=172.17.42.1/16 --dns=172.17.42.1 -H tcp://127.0.0.1:4243 -H unix:///var/run/docker.sock
 ```
+In Debian that will be located under /etc/defaults
 
 The important bits are: ```--bip=172.17.42.1/16 --dns=172.17.42.1```
 
@@ -103,7 +107,7 @@ Quick Start Guide
 * cd back to the base volder 'vagrabt-docker'. NOTE: for all vagrant commands, you need to be at this folder level.
 * bring up the virtual box : ```vagrant --name=<FOLDER NAME> up```
 
-you will now see the guest booting up. The initial boot may be the slowest as the docker host needs to be built.
+You will now see the guest booting up. The initial boot may be the slowest as the docker host needs to be built.
 subsequent up's thereafter will be a matter of seconds, as the guest is already build.
 If you destroy the guest, it will restart from the initial pull/build.
 
@@ -127,8 +131,21 @@ code in multiple PHP versions and environments.
 
 Other custom switches:
 
-* '--bindports' usage : --bindports=1 : this will bind the box to your lcoal host port 80/443 - allowing external access to the box.
+* '--bindports' usage : --bindports=1 : this will bind the box to your lcoal host port 80/443 - allowing external access to the box. Only one box can bind this at any time.
 * '--webserver' usage : --webserver=apache|php : this will invoke the noted webserver, default is apache, use PHP for php's internal webserver
+
+The docker guests expose mysql port, so you can easily use a mysql client from your host to connect to each mysql instance. Just use the noted DNS name of guest as the mysql host.
+
+Since the site code is located on the host, in a local folder, PHPStorm does not have issues with 'sync remote source ontent'
+
+After a guest db was imported, I generally run the command : ```/vagrant/scripts/magento_make_db_local.sh``` for any magento guests.
+This script uses n98-magerun to reconfigure the site urls to ```{{base_url}}``` allowing for the dynamic urls to be used.
+You can easily add to this script any other configuration changes you want into imported db's
+
+https://gist.github.com/ProxiBlue/dfc74f35721b57e96b560d898cb6bfeb
+
+
+
 
 
 
