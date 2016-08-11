@@ -125,17 +125,17 @@ you can then bring up a second box, using the linked source folder, but designat
 
 ```vagrant --name=<NEW_NAME> --basebox=DEBAIN_7 up```
 
-you will end with a box on the original folder (debain 8) and one on teh linked folder (debain 7) allowing you to quickly test
+you will end with a box on the original folder (debain 8) and one on the linked folder (debain 7) allowing you to quickly test
 code in multiple PHP versions and environments.
 
 Other custom switches:
 
 * '--bindports' usage : --bindports=1 : this will bind the box to your lcoal host port 80/443 - allowing external access to the box. Only one box can bind this at any time.
-* '--webserver' usage : --webserver=apache|php : this will invoke the noted webserver, default is apache, use PHP for php's internal webserver
+* '--webserver' usage : --webserver=apache|php : this will invoke the noted webserver, default is apache, use PHP for php's internal webserver (not used the internal php server in a long while, so may be broken)
 
 The docker guests expose mysql port, so you can easily use a mysql client from your host to connect to each mysql instance. Just use the noted DNS name of guest as the mysql host.
 
-Since the site code is located on the host, in a local folder, PHPStorm does not have issues with 'sync remote source ontent'
+Since the site code is located on the host, in a local folder, PHPStorm does not have issues.
 
 After a guest db was imported, I generally run the command : ```/vagrant/scripts/magento_make_db_local.sh``` for any magento guests.
 This script uses n98-magerun to reconfigure the site urls to ```{{base_url}}``` allowing for the dynamic urls to be used.
@@ -143,7 +143,26 @@ You can easily add to this script any other configuration changes you want into 
 
 https://gist.github.com/ProxiBlue/dfc74f35721b57e96b560d898cb6bfeb
 
+Some other things you can do
+============================
 
+If a box (folder) requires some specific setup to run when they get provisioned, you can create a file called <FOLDER>.sh within the /provision folder.
+When a box with that folder name is provisioned (either by an initial startup, or by invoking --provision on a stopped box), the given shell script will be invoked as a final step.
+If no such file exists, generic.sh will run.
+
+You can add a custom webserver instance. Simply create the file named: ```start-#{webserver}#-web.sh``` where #{webserver}# is the name.
+Place this file in the /provision folder.
+Look at the two existing files for examples on usage.
+
+The default is : ```start-apache-web.sh```
+
+Composer, n98-magerun and phpunit is installed into all boxes.
+If you want to add stuff to install when provisioned, add them to generic.sh
+
+Virtualbox and vmware-workstation instances invokes ```install_packages.sh``` during provisioning. (these are done inside the Docker file for docker instances)
+This can make it quite slow to issue a --provision on boxes running in virtualbox
+
+You can force the provider, as normal with Vagrant, by using --provider=docker|virtualbox|vmware-workstation
 
 
 
