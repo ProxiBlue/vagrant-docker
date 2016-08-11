@@ -88,7 +88,9 @@ In your browser :
 
 at this point you'd see one entry for dnsdock itself:
 
-```[]},"f5cbde595e53187bd1ad65e01a62046035c769fbfcee2815008d7a1be47e366e":{"Name":"dnsdock","Image":"dnsdock","Ip":"172.17.0.1","Ttl":-1,"Aliases":[]}}```
+```
+[]},"f5cbde595e53187bd1ad65e01a62046035c769fbfcee2815008d7a1be47e366e":{"Name":"dnsdock","Image":"dnsdock","Ip":"172.17.0.1","Ttl":-1,"Aliases":[]}}
+```
 
 
 Quick Start Guide
@@ -110,6 +112,24 @@ If you destroy the guest, it will restart from the initial pull/build.
 * You will find a fresh (blank) db called 'database'
 * you can now import whatever db you need into the base database, and configure the source to use the db.
 
-More details when I have time.
+You can easily test the same codebase in different versions of PHP/MYSQL/APACHE etc by creating a symlink in the machines folder
+
+example:
+
+ln -s ./<FOLDER> ./<NEW_NAME>
+
+you can then bring up a second box, using the linked source folder, but designate a different basebox (default is DEBAIN_8)
+
+```vagrant --name=<NEW_NAME> --basebox=DEBAIN_7 up```
+
+you will end with a box on the original folder (debain 8) and one on teh linked folder (debain 7) allowing you to quickly test
+code in multiple PHP versions and environments.
+
+Other custom switches:
+
+* '--bindports' usage : --bindports=1 : this will bind the box to your lcoal host port 80/443 - allowing external access to the box.
+* '--webserver' usage : --webserver=apache|php : this will invoke the noted webserver, default is apache, use PHP for php's internal webserver
+
+
 
 

@@ -44,7 +44,8 @@ opts = GetoptLong.new(
 
      [ '--name', GetoptLong::REQUIRED_ARGUMENT ],
      [ '--basebox', GetoptLong::OPTIONAL_ARGUMENT ],
-     [ '--bindports', GetoptLong::OPTIONAL_ARGUMENT ]
+     [ '--bindports', GetoptLong::OPTIONAL_ARGUMENT ],
+     [ '--webserver', GetoptLong::OPTIONAL_ARGUMENT ]
 )
 
 name=''
