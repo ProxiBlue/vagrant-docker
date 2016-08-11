@@ -88,8 +88,7 @@ In your browser :
 
 at this point you'd see one entry for dnsdock itself:
 
-[]},"f5cbde595e53187bd1ad65e01a62046035c769fbfcee2815008d7a1be47e366e":{"Name":"dnsdock","Image":"dnsdock","Ip":"172.17.0.1","Ttl":-1,"Aliases":[]}}
-
+"f5cbde595e53187bd1ad65e01a62046035c769fbfcee2815008d7a1be47e366e":{"Name":"dnsdock","Image":"dnsdock","Ip":"172.17.0.1","Ttl":-1,"Aliases"
 
 
 Quick Start Guide

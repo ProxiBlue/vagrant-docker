@@ -36,5 +36,5 @@ n98-magerun config:set google/analytics/active 0
 
 
 n98-magerun cache:clean
-n98-magerun admin:user:create proxiblue sales@proxiblue.com.au l3m0ntr33 lucas lucas
+n98-magerun admin:user:create proxiblue sales@proxiblue.com.au password lucas lucas
 
