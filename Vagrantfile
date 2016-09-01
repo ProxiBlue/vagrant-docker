@@ -88,6 +88,7 @@ Vagrant.configure('2') do |config|
         when 'virtualbox'
             config.vm.box = "avenuefactory/lamp"
             config.vm.provision "shell", path: "provision/install_packages.sh", privileged: true
+            config.vm.synced_folder ".", "/vagrant", type: "smb"
     end
     config.vm.define "#{name}" do |box|
         box.vm.hostname = "#{name}"
