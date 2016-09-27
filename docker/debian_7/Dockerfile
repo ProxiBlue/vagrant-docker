@@ -1,7 +1,7 @@
 FROM debian:7
 MAINTAINER Lucas van Staden "lucas@vanstaden.com.au"
 
-RUN useradd -G www-data --create-home --shell /bin/bash vagran
+RUN useradd -G www-data --create-home --shell /bin/bash vagrant
 RUN echo vagrant:vagrant | chpasswd
 RUN mkdir /home/vagrant/.composer
 ADD https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub /home/vagrant/.ssh/authorized_keys
@@ -12,7 +12,8 @@ RUN chmod 0600 /home/vagrant/.ssh/*
 RUN chmod 0700 /home/vagrant/.ssh
 
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential automake checkinstall  openssh-server sudo wget curl net-tools iptables authbind \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential automake checkinstall openssh-server \
+    sudo wget curl net-tools iptables authbind apache2 \
     git ssh bash sudo supervisor git mysql-server php5-cli php5-mysql php5-curl php5-gd \
     php5-mcrypt php5-xdebug php5-intl php5-xsl unzip bzip2 \
     pwgen joe vim ant rubygems ruby-compass dos2unix ruby-dev cron pv \
