@@ -86,7 +86,7 @@ Vagrant.configure('2') do |config|
             config.vm.box = "hashicorp/precise64"
             config.vm.provision "shell", path: "provision/install_packages.sh", privileged: true
         when 'virtualbox'
-            config.vm.box = "avenuefactory/lamp"
+            config.vm.box = "bento/ubuntu-14.04"
             config.vm.provision "shell", path: "provision/install_packages.sh", privileged: true
             config.vm.synced_folder ".", "/vagrant", type: "smb"
     end
