@@ -1,0 +1,61 @@
+FROM ubuntu:latest
+MAINTAINER Lucas van Staden "lucas@vanstaden.com.au"
+
+<<<<<<< HEAD
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN useradd -G www-data --create-home --shell /bin/bash vagrant
+=======
+RUN useradd --create-home --shell /bin/bash vagrant
+>>>>>>> 13d8ec8d010605c3d5cc0ba9e30e1716bd6851fb
+RUN echo root:vagrant | chpasswd
+RUN echo vagrant:vagrant | chpasswd
+RUN mkdir /home/vagrant/.composer
+ADD https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/vagrant.pub \
+    /home/vagrant/.ssh/authorized_keys
+#ADD common/auth.json /home/vagrant/.composer/auth.json
+RUN chown -R vagrant:vagrant /home/vagrant/.ssh
+RUN chown -R vagrant:vagrant /home/vagrant/.composer
+RUN chmod 0600 /home/vagrant/.ssh/*
+RUN chmod 0700 /home/vagrant/.ssh
+
+
+#ADD http://dev.mysql.com/get/mysql-apt-config_0.3.5-1debian8_all.deb /tmp/mysql-apt-config.deb
+#RUN DEBIAN_FRONTEND=noninteractive dpkg -i /tmp/mysql-apt-config.deb
+
+#ADD common/mysql_apt /etc/apt/sources.list.d/mysql.list
+
+RUN apt-get update \
+     && DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common openssh-server supervisor sudo \
+     apache2 wget curl net-tools iptables authbind mysql-server \
+     git ssh bash pv unzip bzip2 pwgen joe vim ant dos2unix
+
+RUN DEBIAN_FRONTEND=noninteractive add-apt-repository ppa:ondrej/php-7.0
+
+RUN apt-get update \
+     && DEBIAN_FRONTEND=noninteractive apt-get install -y --force-yes php7.0 php7.0-mysql php7.0-intl \
+     php7.0-curl php7.0-gd php7.0-mcrypt \
+     && apt-get clean
+
+RUN sed --regexp-extended --in-place \
+    's/^session\s+required\s+pam_loginuid.so$/session optional pam_loginuid.so/' \
+    /etc/pam.d/sshd
+
+RUN sed -i "s%bind-address%#bind-address%g" /etc/mysql/my.cnf
+
+ADD sudoers.d/01_vagrant /etc/sudoers.d/
+RUN chmod 0400 /etc/sudoers.d/01_vagrant
+
+ADD common/start-mysqld.sh /start-mysqld.sh
+ADD common/shutdown /sbin/shutdown
+ADD common/start-sshd.sh /start-sshd.sh
+RUN chmod 755 /*.sh
+ADD common/xdebug.ini /etc/php5/mods-available/xdebug.ini
+ADD common/supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.conf
+ADD common/supervisord-sshd.conf /etc/supervisor/conf.d/supervisord-sshd.conf
+
+# Add MySQL users and `database`
+RUN chmod 755 /*.sh /sbin/shutdown
+RUN mkdir /var/run/sshd
+EXPOSE 22 80 3306 9000
+CMD ["/usr/bin/supervisord", "-n"]
