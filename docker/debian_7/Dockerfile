@@ -12,9 +12,8 @@ RUN chmod 0600 /home/vagrant/.ssh/*
 RUN chmod 0700 /home/vagrant/.ssh
 
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential automake checkinstall openssh-server \
-    sudo wget curl net-tools iptables authbind apache2 \
-    git ssh bash sudo supervisor git mysql-server php5-cli php5-mysql php5-curl php5-gd \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential automake checkinstall  openssh-server sudo wget curl net-tools iptables authbind\
+    git ssh bash sudo supervisor git mysql-server php5-cli php5-mysql php5-curl php5-gd libapache2-mod-php5 \
     php5-mcrypt php5-xdebug php5-intl php5-xsl unzip bzip2 \
     pwgen joe vim ant rubygems ruby-compass dos2unix ruby-dev cron pv \
     && apt-get clean
