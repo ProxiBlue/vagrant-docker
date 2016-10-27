@@ -27,6 +27,7 @@ RUN sed --regexp-extended --in-place \
     /etc/pam.d/sshd
 
 RUN sed -i "s%bind-address%#bind-address%g" /etc/mysql/my.cnf
+RUN sed -i "s%listen = 127.0.0.1:9000%listen = /var/run/php5-fpm.sock%g" /etc/php5/fpm/pool.d/www.conf
 
 ADD sudoers.d/01_vagrant /etc/sudoers.d/
 RUN chmod 0400 /etc/sudoers.d/01_vagrant
@@ -40,6 +41,7 @@ ADD common/supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.con
 ADD common/supervisord-sshd.conf /etc/supervisor/conf.d/supervisord-sshd.conf
 RUN chmod 755 /*.sh /sbin/shutdown
 RUN mkdir /var/run/sshd
+RUN service php5-fpm restart
 RUN service nginx start
 EXPOSE 22 80 3306 9000
 CMD ["/usr/bin/supervisord", "-n"]

@@ -40,9 +40,11 @@ RUN chmod 0400 /etc/sudoers.d/01_vagrant
 ADD common/start-mysqld.sh /start-mysqld.sh
 ADD common/shutdown /sbin/shutdown
 ADD common/start-sshd.sh /start-sshd.sh
+ADD common/start-sshd.sh /start-phpfpm.sh
 RUN chmod 755 /*.sh
 ADD common/xdebug.ini /etc/php5/mods-available/xdebug.ini
 ADD common/supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.conf
+ADD common/supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-phpfpm.conf
 ADD common/supervisord-sshd.conf /etc/supervisor/conf.d/supervisord-sshd.conf
 RUN chmod 755 /*.sh /sbin/shutdown
 RUN mkdir /var/run/sshd

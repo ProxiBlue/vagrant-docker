@@ -14,9 +14,9 @@ startmysql() {
         mysql -uroot -proot -e "status" > /dev/null 2>&1
         RET=$?
         ((COUNT=COUNT+1))
-        if [ $COUNT -gt 5 ]; then
+        if [ $COUNT -gt 2 ]; then
             while [[ RET -ne 0 ]]; do
-                echo "=> Waiting for confirmation of MySQL service startup (root/none) $COUNT/5"
+                echo "=> Waiting for confirmation of MySQL service startup (root/none) $COUNT/2"
                 sleep 3
                 mysql -uroot -e "status" > /dev/null 2>&1
                 RET=$?
