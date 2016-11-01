@@ -36,7 +36,7 @@ ADD common/start-mysqld.sh /start-mysqld.sh
 ADD common/shutdown /sbin/shutdown
 ADD common/start-sshd.sh /start-sshd.sh
 RUN chmod 755 /*.sh
-ADD common/xdebug.ini /etc/php5/mods-available/xdebug.ini
+ADD common/xdebug.ini /etc/php5/fpm/conf.d/
 ADD common/supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.conf
 ADD common/supervisord-sshd.conf /etc/supervisor/conf.d/supervisord-sshd.conf
 RUN chmod 755 /*.sh /sbin/shutdown
