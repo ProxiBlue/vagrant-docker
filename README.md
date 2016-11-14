@@ -21,8 +21,7 @@ Requirements
 
 1. Vagrant, latest is best. I use 1.8.1. Not tested on any others, but should work.
 2. Docker. I use Linux (Manjaro), so installed via its package manager. I am on version 1.10.3, build 20f81dd
-3. [virtualbox / vmware-workstation in place of docker] - these do work, in place of docker, but is not actively maintained, as I don't use them
-4. https://github.com/tonistiigi/dnsdock (more later in setup)
+3. https://github.com/tonistiigi/dnsdock (more later in setup)
 
 Setup Environment
 =================

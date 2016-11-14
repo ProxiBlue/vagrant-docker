@@ -18,7 +18,7 @@ sudo a2enmod headers
 sudo a2enmod ssl
 
 
-if [ ! -f $DOCROOT/.htacess ]; then
+if [ ! -f $DOCROOT/.htaccess ]; then
     ln -s $BASEFOLDER/.htaccess.dev $DOCROOT/.htaccess
 fi
 
