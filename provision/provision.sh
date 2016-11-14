@@ -8,6 +8,8 @@ then
     mkdir /vagrant/machines/$NAME/logs -p
     ln -s /var/log/apache2 /vagrant/machines/$NAME/logs/apache
 fi
+#ln -s /var/log/apache2 /vagrant/machines/$NAME/logs/apache
+
 
 
 

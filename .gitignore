@@ -1,3 +1,7 @@
 machines/*
 .idea
 .vagrant
+
+#private elements that only goes to teh private repo version
+*viyet*
+

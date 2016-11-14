@@ -20,9 +20,9 @@ then
     sudo a2enmod ssl
 
 
-    if [ ! -f $DOCROOT/.htacess ]; then
-        ln -s $BASEFOLDER/.htaccess.dev $DOCROOT/.htaccess
-    fi
+if [ ! -f $DOCROOT/.htaccess ]; then
+    ln -s $BASEFOLDER/.htaccess.dev $DOCROOT/.htaccess
+fi
 
     sudo service apache2 restart
 fi

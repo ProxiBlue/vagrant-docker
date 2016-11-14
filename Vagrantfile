@@ -8,14 +8,6 @@
 
 require 'getoptlong'
 
-ENV['VAGRANT_DEFAULT_PROVIDER'] = 'docker'
-
-if Vagrant::Util::Platform.windows?
-    puts "Shame, you on windowzzzzzz"
-    ENV['VAGRANT_DETECTED_OS'] = 'cygwin'
-    ENV['VAGRANT_DEFAULT_PROVIDER'] = 'virtualbox'
-end
-
 opts = GetoptLong.new(
   ##
   # Native Vagrant options
@@ -53,6 +45,7 @@ name=''
 basebox='docker/debian_8'
 webserver="apache"
 bindPorts=false
+provider="docker"
 
 opts.each do |opt, arg|
   case opt
@@ -61,7 +54,7 @@ opts.each do |opt, arg|
     when '--basebox'
       basebox= "docker/" + arg
     when '--provider'
-      ENV['VAGRANT_DEFAULT_PROVIDER']=arg
+      provider=arg
     when '--bindports'
       bindPorts=true
     when '--webserver'
@@ -75,55 +68,23 @@ r = Random.new
 ssh_port = r.rand(1000...5000)
 
 Vagrant.configure('2') do |config|
-    puts "using #{ENV['VAGRANT_DEFAULT_PROVIDER']} as provider and #{ssh_port} for ssh"
+    puts "using #{provider} as provider and #{ssh_port} for ssh"
     config.vm.boot_timeout = 1800
     #uncomment and change to your required timezone, if default not acceptable.
     #config.vm.provision :shell, :inline => "echo \"Australia/Perth\" sudo tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata"
     config.vm.network "private_network", type: "dhcp"
     config.vm.network "forwarded_port", guest: 22, host: "#{ssh_port}", id: 'ssh', auto_correct: true
-    case ENV['VAGRANT_DEFAULT_PROVIDER']
-        when 'vmware_workstation'
-            config.vm.box = "hashicorp/precise64"
-            config.vm.provision "shell", path: "provision/install_packages.sh", privileged: true
-        when 'virtualbox'
-            config.vm.box = "bento/ubuntu-14.04"
-            config.vm.provision "shell", path: "provision/install_packages.sh", privileged: true
-            config.vm.synced_folder ".", "/vagrant", type: "smb"
-    end
     config.vm.define "#{name}" do |box|
         box.vm.hostname = "#{name}"
-        case ENV['VAGRANT_DEFAULT_PROVIDER']
-            when 'docker'
-                box.vm.provider 'docker' do |d|
-                    d.build_dir = Dir.pwd + "/#{basebox}"
-                    d.has_ssh = true
-                    d.name = "#{name}"
-                    d.env = { "DNSDOCK_IMAGE" => "#{name}" }
-	                if (bindPorts)
-                        d.ports = [ "80:80", "443:443" ]
-	                end
-	                d.remains_running = true
-                end
-            when 'vmware_workstation'
-                config.vm.box = "hashicorp/precise64"
-                config.vm.provider 'vmware_workstation' do |v|
-                    # Boot with a GUI so you can see the screen. (Default is headless)
-                    #v.gui = true
-                    v.name = "#{name}"
-                    v.vmx["memsize"] = "4096"
-                    v.vmx["numvcpus"] = "1"
-                end
-            when 'virtualbox'
-                config.vm.provider 'virtualbox' do |vb|
-                    # Boot with a GUI so you can see the screen. (Default is headless)
-                    vb.gui = true
-                    vb.name = "#{name}"
-                    #change netwoprk adapter - default one one has speed issues with host only
-                    vb.customize ["modifyvm", :id, "--nictype1", "virtio"]
-                    vb.customize ["modifyvm", :id, "--nictype2", "virtio"]
-                end
-        else
-            puts "#{ENV['VAGRANT_DEFAULT_PROVIDER']} not yet defined"
+        box.vm.provider 'docker' do |d|
+            d.build_dir = Dir.pwd + "/#{basebox}"
+            d.has_ssh = true
+            d.name = "#{name}"
+            d.env = { "DNSDOCK_IMAGE" => "#{name}", "DNSDOCK_ALIAS" => "www.#{name}"}
+            if (bindPorts)
+                d.ports = [ "80:80", "443:443" ]
+            end
+            d.remains_running = true
         end
     end
 
