@@ -164,7 +164,43 @@ This can make it quite slow to issue a --provision on boxes running in virtualbo
 
 You can force the provider, as normal with Vagrant, by using --provider=docker|virtualbox|vmware-workstation
 
+An example startup of a previously provisioned box to work on the Dynamic Category products module:
+===================================================================================================
 
+```
+00:15 $ vagrant --name=dyncatprod up
+using docker as provider and 4168 for ssh
+Bringing machine 'dyncatprod' up with 'docker' provider...
+==> dyncatprod: Image is already built from the Dockerfile. `vagrant reload` to rebuild.
+==> dyncatprod: Starting container...
+==> dyncatprod: Waiting for machine to boot. This may take a few minutes...
+    dyncatprod: SSH address: 172.17.0.4:22
+    dyncatprod: SSH username: vagrant
+    dyncatprod: SSH auth method: private key
+    dyncatprod: Warning: Connection refused. Retrying...
+==> dyncatprod: Machine booted and ready!
+==> dyncatprod: Machine already provisioned. Run `vagrant provision` or use the `--provision`
+==> dyncatprod: flag to force provisioning. Provisioners marked to run always will still run.
+==> dyncatprod: Running provisioner: shell...
+    dyncatprod: Running: /tmp/vagrant-shell20161115-27495-kddkjx.sh
+==> dyncatprod: stdin: is not a tty
+==> dyncatprod: STARTING APACHE WEBSERVER
+==> dyncatprod: Site default-ssl already enabled
+==> dyncatprod: Module rewrite already enabled
+==> dyncatprod: Module headers already enabled
+==> dyncatprod: Considering dependency setenvif for ssl:
+==> dyncatprod: Module setenvif already enabled
+==> dyncatprod: Considering dependency mime for ssl:
+==> dyncatprod: Module mime already enabled
+==> dyncatprod: Considering dependency socache_shmcb for ssl:
+==> dyncatprod: Module socache_shmcb already enabled
+==> dyncatprod: Module ssl already enabled
+==> dyncatprod: Restarting web server: apache2
+==> dyncatprod: AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.17.0.4. Set the 'ServerName' directive globally to suppress this message
+==> dyncatprod: .
+[Tue Nov 15 00:16:06] [lucas@DeepThought vagrant-docker]$  [master L|⚑ 3]
+00:16 $
+```
 
 
 
