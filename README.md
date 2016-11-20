@@ -16,6 +16,9 @@ My want was simple:
 
 So I looked at Vagrant, and since the Vagrant commands file is simply just a ruby script, I adjusted to my needs.
 
+Initially the environment included code to also automatically install new magento installs, but I slimmed that down.
+I use this also for work that is not magento related (example wordpress) so made it more generic.
+
 Requirements
 =============
 
