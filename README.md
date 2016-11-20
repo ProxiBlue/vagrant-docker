@@ -164,6 +164,37 @@ This can make it quite slow to issue a --provision on boxes running in virtualbo
 
 You can force the provider, as normal with Vagrant, by using --provider=docker|virtualbox|vmware-workstation
 
+XDebug Profiling
+================
+
+The default xdebug.ini setup will have the profiler setup to output to the folder /var/www/html/var/profiler 
+In Magento land that will place profiling traces in the Magento var folder.
+The folder ```/var/www/html``` is a symlink to the sources of the folder you have initialised as the virtual machine: ```html -> /vagrant/machines/jackt/www//docroot```
+
+If you use this setup for other work (excample WordPress) you may have to create the var folder in the root of your site code.
+
+```
+xdebug.profiler_enable_trigger=On
+xdebug.profiler_enable=0
+xdebug.profiler_output_dir=/var/www/html/var/profiler
+xdebug.max_nesting_level=200
+xdebug.profiler_output_name="%R-%u.trace"
+xdebug.profiler_append=On
+```
+Tracers will have the name of the action controller in magento
+
+example:
+
+```
+_checkout_cart_-1479617767_818847.trace
+```
+
+is a trace of teh cart page loading.
+You can trigger profiling using any Xdebug helper
+I use this one: https://chrome.google.com/webstore/detail/xdebug-helper/eadndfjplgieldjbigjakmdgkmoaaaoc?hl=en
+
+Once enabled, you will have traces placed in the folder, which is conveniently placed to load up with PHPStorm profiler
+
 An example startup of a previously provisioned box to work on the Dynamic Category products module:
 ===================================================================================================
 
