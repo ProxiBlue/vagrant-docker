@@ -6,7 +6,7 @@
 startmysql() {
     sudo /usr/bin/mysqld_safe > /dev/null 2>&1 &
     RET=1
-    COUNT=0
+    COUNT=1
 
     while [[ RET -ne 0 ]]; do
         echo "=> Waiting for confirmation of MySQL service startup (root/root) $COUNT/3"
