@@ -14,14 +14,15 @@ RUN chmod 0700 /home/vagrant/.ssh
 
 
 ADD http://dev.mysql.com/get/mysql-apt-config_0.3.5-1debian8_all.deb /tmp/mysql-apt-config.deb
+RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 5072E1F5
 RUN DEBIAN_FRONTEND=noninteractive dpkg -i /tmp/mysql-apt-config.deb
 
 ADD common/mysql_apt /etc/apt/sources.list.d/mysql.list
 
 RUN apt-get update \
      && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential automake checkinstall openssh-server supervisor sudo \
-     apache2 wget curl net-tools iptables authbind mysql-server-5.6 \
-     git ssh bash php5 php5-cli php5-mysql php5-curl php5-gd pv rubygems ruby-compass\
+     redis-server memcached apache2 wget curl net-tools iptables authbind mysql-server-5.6 \
+     git ssh bash php5 php5-cli php5-mysql php5-curl php5-gd php5-redis pv rubygems ruby-compass\
      php5-mcrypt php5-xdebug php5-intl php5-xsl unzip bzip2 pwgen joe vim ant dos2unix cron ruby-dev pv \
      && apt-get clean
 
@@ -46,5 +47,6 @@ ADD common/supervisord-mysqld.conf /etc/supervisor/conf.d/supervisord-mysqld.con
 ADD common/supervisord-sshd.conf /etc/supervisor/conf.d/supervisord-sshd.conf
 RUN chmod 755 /*.sh /sbin/shutdown
 RUN mkdir /var/run/sshd
+RUN /etc/init.d/redis-server start
 EXPOSE 22 80 3306 9000
 CMD ["/usr/bin/supervisord", "-n"]
