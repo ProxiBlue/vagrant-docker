@@ -13,7 +13,7 @@ Vagrant based development environment
 
 ```git clone git@github.com:uptactics/vagrant.git```
 
-* cd into teh new folder (called vagrant) 
+* cd into the new folder (called vagrant) 
 
 ```cd vagrant```
 
@@ -23,7 +23,7 @@ Vagrant based development environment
 
 That is it
 
-You can ssh to teh vagrant box ussing:
+You can ssh to the vagrant box ussing:
 
 * vagrant ssh
 
