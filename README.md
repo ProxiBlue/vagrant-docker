@@ -11,7 +11,9 @@ Vagrant based development environment
 
 * Clone this repo: 
 
-```git clone git@github.com:uptactics/vagrant.git```
+```git clone --recursive git@github.com:uptactics/vagrant.git```
+
+*** This will checkout EVERYTHING - INCLUDES THE SITE CODE UNDER sites FOLDER
 
 * cd into the new folder (called vagrant) 
 
