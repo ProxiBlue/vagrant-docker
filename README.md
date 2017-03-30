@@ -9,9 +9,17 @@ Vagrant based development environment
 
 ## Install
 
-* Clone this repo: ```git clone git@github.com:uptactics/vagrant.git```
-* cd into teh new folder (called vagrant) ```cd vagrant```
-* bring the server up ```vagrant up```
+* Clone this repo: 
+
+```git clone git@github.com:uptactics/vagrant.git```
+
+* cd into teh new folder (called vagrant) 
+
+```cd vagrant```
+
+* bring the server up 
+
+```vagrant up```
 
 That is it
 
