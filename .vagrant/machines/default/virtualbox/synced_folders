@@ -1,0 +1,1 @@
+{"virtualbox":{"/vagrant":{"mount_options":["dmode=777","fmode=666"],"guestpath":"/vagrant","hostpath":"/home/lucas/uptactics","disabled":false,"__vagrantfile":true}}}

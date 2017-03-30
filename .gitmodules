@@ -1,0 +1,12 @@
+[submodule "sites/protank"]
+	path = sites/protank
+	url = git@github.com:uptactics/protank.git
+[submodule "sites/sprayersupplies"]
+	path = sites/sprayersupplies
+	url = git@github.com:uptactics/sprayersupplies.git
+[submodule "sites/pvcpipesupplies"]
+	path = sites/pvcpipesupplies
+	url = git@github.com:uptactics/pvcpipesupplies.git
+[submodule "sites/ntotank"]
+	path = sites/ntotank
+	url = git@github.com:uptactics/ntotank.git
