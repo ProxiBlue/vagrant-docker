@@ -24,7 +24,7 @@ if [ -e ./composer.json ] ; then
     composer update
 fi
 npm install
-dos2unix /vagrant/sites/ntotank/shell/*.sh
+dos2unix /vagrant/sites/protank/shell/*.sh
 cd app/etc
 if [ ! -L ./local.xml ] ; then
         ln -s ./local.xml.dev ./local.xml
@@ -34,7 +34,7 @@ cd /vagrant/sites/sprayersupplies
 if [ -e ./composer.json ] ; then
     composer update
 fi
-dos2unix /vagrant/sites/ntotank/shell/*.sh
+dos2unix /vagrant/sites/sprayersupplies/shell/*.sh
 cd app/etc
 if [ ! -L ./local.xml ] ; then
         ln -s ./local.xml.dev ./local.xml
@@ -44,7 +44,7 @@ cd /vagrant/sites/pvcpipesupplies
 if [ -e ./composer.json ] ; then
     composer update
 fi
-dos2unix /vagrant/sites/ntotank/shell/*.sh
+dos2unix /vagrant/sites/pvcpipesupplies/shell/*.sh
 cd app/etc
 if [ ! -L ./local.xml ] ; then
         ln -s ./local.xml.dev ./local.xml
