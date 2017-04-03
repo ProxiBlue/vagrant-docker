@@ -7,12 +7,10 @@ ssh_port = 2222
 
 Vagrant.configure("2") do |config|
   config.vm.boot_timeout = 1800
-  # https://vagrantcloud.com/richdynamix/boxes/magestead-centos65-nginx-php56
-  config.vm.box = "richdynamix/magestead-centos65-nginx-php56"
+  # https://atlas.hashicorp.com/vagrant
+  config.vm.box = "proxiblue/magemojo"
   
   config.vm.provision "file", source: "./magento_nginx", destination: "/tmp/magento_nginx"
-  config.vm.provision "file", source: "./www.conf", destination: "/tmp/www.conf"
-  config.vm.provision "file", source: "./my.cnf", destination: "/tmp/my.cnf"
 
   config.vm.provision :shell, :path => "bootstrap.sh"
   config.vm.network "private_network", ip: "192.168.50.2"
