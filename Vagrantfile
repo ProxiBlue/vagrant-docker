@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=666"]
   puts "using #{ssh_port} for ssh"
-  config.vm.network "forwarded_port", guest: 22, host: "#{ssh_port}", id: 'ssh', auto_correct: true
+  config.vm.network "forwarded_port", guest: 22, host_ip: "127.0.0.1", host: "#{ssh_port}", id: 'ssh', auto_correct: true
   config.vm.provider :virtualbox do |vb|
     vb.customize ["modifyvm", :id, "--memory", "4096"]
     vb.name = "#{hostname}"
