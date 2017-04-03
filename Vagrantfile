@@ -14,8 +14,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision :shell, :path => "bootstrap.sh"
   config.vm.network "private_network", ip: "192.168.50.2"
-  config.vm.network :forwarded_port, guest: 80, host: 80
-  config.vm.network :forwarded_port, guest: 3306, host: 3306
+  config.vm.network :forwarded_port, host_ip: "127.0.0.1", guest: 80, host: 80
+  config.vm.network :forwarded_port, host_ip: "127.0.0.1", guest: 3306, host: 3306
 
   config.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=666"]
   puts "using #{ssh_port} for ssh"
