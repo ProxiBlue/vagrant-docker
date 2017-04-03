@@ -21,7 +21,7 @@ Vagrant.configure("2") do |config|
   puts "using #{ssh_port} for ssh"
   config.vm.network "forwarded_port", guest: 22, host: "#{ssh_port}", id: 'ssh', auto_correct: true
   config.vm.provider :virtualbox do |vb|
-    vb.customize ["modifyvm", :id, "--memory", "1024"]
+    vb.customize ["modifyvm", :id, "--memory", "4096"]
     vb.name = "#{hostname}"
   end
 end
