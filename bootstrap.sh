@@ -51,5 +51,7 @@ if [ ! -L ./local.xml ] ; then
         n98-magerun db:create
 fi
 
+echo "cd /vagrant/sites" >> /home/vagrant/.bashrc
+
 echo "You can remote SSH to 192.168.50.2 using user 'vagrant' with password 'tanks'"
 echo "Alternatively you can simply use: 'vagrant ssh' to ssh into server without a password"
