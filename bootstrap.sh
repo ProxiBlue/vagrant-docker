@@ -24,6 +24,7 @@ if [ -e ./composer.json ] ; then
     composer update
 fi
 npm install
+/bin/bash buildGulp.sh
 dos2unix /vagrant/sites/protank/shell/*.sh
 cd app/etc
 if [ ! -L ./local.xml ] ; then
