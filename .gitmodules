@@ -1,16 +1,16 @@
 [submodule "sites/protank"]
 	path = sites/protank
-	url = git@github.com:uptactics/protank.git
+	url = git@github.com-protank:uptactics/protank.git
 	ignore = all
 [submodule "sites/sprayersupplies"]
 	path = sites/sprayersupplies
-	url = git@github.com:uptactics/sprayersupplies.git
+	url = git@github.com-sprayersupplies:uptactics/sprayersupplies.git
 	ignore = all
 [submodule "sites/pvcpipesupplies"]
 	path = sites/pvcpipesupplies
-	url = git@github.com:uptactics/pvcpipesupplies.git
+	url = git@github.com-pvcpipesupplies:uptactics/pvcpipesupplies.git
 	ignore = all
 [submodule "sites/ntotank"]
 	path = sites/ntotank
-	url = git@github.com:uptactics/ntotank.git
+	url = git@github.com-ntotank:uptactics/ntotank.git
 	ignore = all
