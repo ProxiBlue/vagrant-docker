@@ -21,7 +21,9 @@ RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 5072E1F5
 RUN DEBIAN_FRONTEND=noninteractive dpkg -i /tmp/mysql-apt-config.deb
 
 ADD common/mysql_apt /etc/apt/sources.list.d/mysql.list
-ADD common/nginx.list /etx/apt/sources.list.d/nginx.list
+ADD common/nginx.list /etc/apt/sources.list.d/nginx.list
+
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
 
 RUN apt-get update \
      && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential automake checkinstall openssh-server supervisor sudo \
@@ -45,6 +47,9 @@ RUN sed --regexp-extended --in-place \
     /etc/pam.d/sshd
 
 RUN sed -i "s%bind-address%#bind-address%g" /etc/mysql/my.cnf
+
+RUN curl -sL https://deb.nodesource.com/setup_4.x | sudo bash -
+RUN apt-get install --yes nodejs
 
 ADD sudoers.d/01_vagrant /etc/sudoers.d/
 RUN chmod 0400 /etc/sudoers.d/01_vagrant

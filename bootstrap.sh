@@ -15,9 +15,6 @@ chown root:root /etc/nginx/ -R
 /etc/init.d/php54-php-fpm start
 service nginx restart
 
-curl -sL https://deb.nodesource.com/setup_4.x | sudo bash -
-apt-get install --yes nodejs
-
 cd /vagrant/sites/ntotank
 if [ -e ./composer.json ] ; then
     composer update
