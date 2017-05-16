@@ -1,6 +1,7 @@
 #!/bin/bash
 
 /etc/init.d/mysqld start
+/etc/init.d/redis-server start
 
 mysql -uroot <<MYSQL_SCRIPT
 CREATE USER 'dev'@'localhost' IDENTIFIED BY 'dev';

@@ -54,6 +54,7 @@ RUN apt-get install --yes nodejs
 ADD sudoers.d/01_vagrant /etc/sudoers.d/
 RUN chmod 0400 /etc/sudoers.d/01_vagrant
 
+ADD common/www.conf /etc/php5/fpm/pool.d/
 ADD common/start-mysqld.sh /start-mysqld.sh
 ADD common/shutdown /sbin/shutdown
 ADD common/start-sshd.sh /start-sshd.sh
