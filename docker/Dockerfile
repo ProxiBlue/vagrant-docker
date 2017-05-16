@@ -21,6 +21,7 @@ RUN apt-key adv --keyserver pgp.mit.edu --recv-keys 5072E1F5
 RUN DEBIAN_FRONTEND=noninteractive dpkg -i /tmp/mysql-apt-config.deb
 
 ADD common/mysql_apt /etc/apt/sources.list.d/mysql.list
+ADD common/nginx.list /etx/apt/sources.list.d/nginx.list
 
 RUN apt-get update \
      && DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential automake checkinstall openssh-server supervisor sudo \
