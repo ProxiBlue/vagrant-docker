@@ -24,6 +24,7 @@ if [ -e ./composer.json ] ; then
     composer update
 fi
 npm install
+npm rebuild node-sass
 /bin/bash buildGulp.sh
 dos2unix /vagrant/sites/protank/shell/*.sh
 cd app/etc

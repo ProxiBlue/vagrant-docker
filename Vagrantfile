@@ -8,7 +8,7 @@ ssh_port = 2222
 Vagrant.configure("2") do |config|
   config.vm.boot_timeout = 1800
   # https://atlas.hashicorp.com/vagrant
-  config.vm.box = "proxiblue/magemojo"
+  # config.vm.box = "proxiblue/magemojo"
   
   config.vm.provision "file", source: "./magento_nginx", destination: "/tmp/magento_nginx"
 
@@ -23,6 +23,12 @@ Vagrant.configure("2") do |config|
   config.vm.provider :virtualbox do |vb|
     vb.customize ["modifyvm", :id, "--memory", "4096"]
     vb.name = "#{hostname}"
+  end
+  config.vm.provider 'docker' do |d|
+      d.build_dir = "docker"
+      d.has_ssh = true
+      d.name = "uptactics"
+      d.remains_running = true
   end
 end
 
