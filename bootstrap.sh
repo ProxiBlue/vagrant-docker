@@ -10,6 +10,7 @@ FLUSH PRIVILEGES;
 MYSQL_SCRIPT
 
 cp -xav /tmp/magento_nginx/* /etc/nginx/
+cp -xav /tmp/magento_nginx/.htpasswd /etc/nginx/
 chown root:root /etc/nginx/ -R
 cp -xav /tmp/www.conf /etc/php5/fpm/pool.d/
 
@@ -88,4 +89,4 @@ chmod 777 /vagrant/sites/pvcpipesupplies/var
 echo "cd /vagrant/sites" >> /home/vagrant/.bashrc
 echo "use: 'vagrant ssh' to ssh into server without a password"
 echo "Pleace into HOSTS file:"
-echo "`hostname --ip-address` www.ntotank.dev www.sprayersupplies.dev www.protank.dev pvcpipesupplies.dev"
+echo "IP OF DROPLET www.ntotank.dev www.sprayersupplies.dev www.protank.dev pvcpipesupplies.dev"
