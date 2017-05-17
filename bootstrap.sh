@@ -11,9 +11,9 @@ MYSQL_SCRIPT
 
 cp -xav /tmp/magento_nginx/* /etc/nginx/
 chown root:root /etc/nginx/ -R
-#cp -xav /tmp/www.conf /etc/php-fpm.d/www.conf
+cp -xav /tmp/www.conf /etc/php5/fpm/pool.d/
 
-/etc/init.d/php54-php-fpm start
+/etc/init.d/php54-php-fpm restart
 service nginx restart
 
 cd /vagrant/sites/ntotank

@@ -9,6 +9,7 @@ Vagrant.configure("2") do |config|
   config.vm.boot_timeout = 1800
   
   config.vm.provision "file", source: "./magento_nginx", destination: "/tmp/magento_nginx"
+  config.vm.provision "file", source: "./www.conf", destination: "/tmp/"
 
   config.vm.provision :shell, :path => "bootstrap.sh"
   config.vm.network :forwarded_port, guest: 80, host: 80
