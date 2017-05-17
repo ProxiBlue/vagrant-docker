@@ -74,6 +74,6 @@ mkdir /vagrant/sites/pvcpipesupplies/snapshot
 chmod 777 /vagrant/sites/pvcpipesupplies/snapshot
 
 echo "cd /vagrant/sites" >> /home/vagrant/.bashrc
-
-echo "You can remote SSH to 192.168.50.2 using user 'vagrant' with password 'tanks'"
-echo "Alternatively you can simply use: 'vagrant ssh' to ssh into server without a password"
+echo "use: 'vagrant ssh' to ssh into server without a password"
+echo "Pleace into HOSTS file:"
+echo "`hostname --ip-address` www.ntotank.dev www.sprayersupplies.dev www.protank.dev pvcpipesupplies.dev"
