@@ -12,6 +12,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "file", source: "./www.conf", destination: "/tmp/www.conf"
 
   config.vm.provision :shell, :path => "bootstrap.sh"
+  config.vm.provision :shell, :path => "services.sh", :run => "always"
   config.vm.network :forwarded_port, guest: 80, host: 80
   config.vm.network :forwarded_port, guest: 3306, host: 3306
 

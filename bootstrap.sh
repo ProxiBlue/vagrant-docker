@@ -21,9 +21,6 @@ chmod 775 /vagrant/sites -R
 service nginx restart
 
 cd /vagrant/sites/ntotank
-if [ -e ./composer.json ] ; then
-    composer update
-fi
 dos2unix /vagrant/sites/ntotank/shell/*.sh
 cd app/etc
 if [ ! -L ./local.xml ] ; then
@@ -36,14 +33,6 @@ mkdir /vagrant/sites/ntotank/var
 chmod 777 /vagrant/sites/ntotank/var
 
 cd /vagrant/sites/protank
-if [ -e ./composer.json ] ; then
-    composer update
-fi
-npm install 
-npm install gulp -g
-npm rebuild node-sass
-
-/bin/bash buildGulp.sh
 dos2unix /vagrant/sites/protank/shell/*.sh
 cd app/etc
 if [ ! -L ./local.xml ] ; then
@@ -56,9 +45,6 @@ mkdir /vagrant/sites/protank/var
 chmod 777 /vagrant/sites/protank/var
 
 cd /vagrant/sites/sprayersupplies
-if [ -e ./composer.json ] ; then
-    composer update
-fi
 dos2unix /vagrant/sites/sprayersupplies/shell/*.sh
 cd app/etc
 if [ ! -L ./local.xml ] ; then
@@ -71,9 +57,6 @@ mkdir /vagrant/sites/sprayersupplies/var
 chmod 777 /vagrant/sites/sprayersupplies/var
 
 cd /vagrant/sites/pvcpipesupplies
-if [ -e ./composer.json ] ; then
-    composer update
-fi
 dos2unix /vagrant/sites/pvcpipesupplies/shell/*.sh
 cd app/etc
 if [ ! -L ./local.xml ] ; then
@@ -88,5 +71,6 @@ chmod 777 /vagrant/sites/pvcpipesupplies/var
 
 echo "cd /vagrant/sites" >> /home/vagrant/.bashrc
 echo "use: 'vagrant ssh' to ssh into server without a password"
-echo "Pleace into HOSTS file:"
+echo "SSH into vagrant and then run: bash /vagrant/init_droplets.sh"
+echo "Place into HOSTS file:"
 echo "IP OF DROPLET www.ntotank.dev www.sprayersupplies.dev www.protank.dev pvcpipesupplies.dev"
