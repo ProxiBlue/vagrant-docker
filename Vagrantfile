@@ -31,6 +31,7 @@ opts = GetoptLong.new(
      [ '--plugin-source', GetoptLong::NO_ARGUMENT ],
      [ '--plugin-version', GetoptLong::NO_ARGUMENT ],
      [ '--debug', GetoptLong::NO_ARGUMENT ],
+     [ '--command', '-c', GetoptLong::NO_ARGUMENT ],
 
     ## custom options
 
