@@ -1,0 +1,78 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+hostname = "uptacticsV2"
+
+require 'getoptlong'
+opts = GetoptLong.new(
+  ##
+  # Native Vagrant options
+     [ '--force', '-f', GetoptLong::NO_ARGUMENT ],
+     [ '--provision', '-p', GetoptLong::NO_ARGUMENT ],
+     [ '--provision-with', GetoptLong::NO_ARGUMENT ],
+     [ '--provider', GetoptLong::OPTIONAL_ARGUMENT ],
+     [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
+     [ '--check', GetoptLong::NO_ARGUMENT ],
+     [ '--logout', GetoptLong::NO_ARGUMENT ],
+     [ '--token', GetoptLong::NO_ARGUMENT ],
+     [ '--disable-http', GetoptLong::NO_ARGUMENT ],
+     [ '--http', GetoptLong::NO_ARGUMENT ],
+     [ '--https', GetoptLong::NO_ARGUMENT ],
+     [ '--ssh-no-password', GetoptLong::NO_ARGUMENT ],
+     [ '--ssh', GetoptLong::NO_ARGUMENT ],
+     [ '--ssh-port', GetoptLong::NO_ARGUMENT ],
+     [ '--ssh-once', GetoptLong::NO_ARGUMENT ],
+     [ '--host', GetoptLong::NO_ARGUMENT ],
+     [ '--entry-point', GetoptLong::NO_ARGUMENT ],
+     [ '--plugin-source', GetoptLong::NO_ARGUMENT ],
+     [ '--plugin-version', GetoptLong::NO_ARGUMENT ],
+     [ '--debug', GetoptLong::NO_ARGUMENT ],
+     [ '--command', '-c', GetoptLong::NO_ARGUMENT ],
+
+    ## custom options
+
+     [ '--sync-images', GetoptLong::NO_ARGUMENT ],
+     [ '--single-site', GetoptLong::REQUIRED_ARGUMENT ],
+)
+
+sync_images=false
+single_site=false
+
+opts.each do |opt, arg|
+  case opt
+    when '--sync-images'
+      sync_images=true
+    when '--single-site'
+      single_site=arg
+  end
+end
+
+ssh_port = 2222
+
+Vagrant.configure("2") do |config|
+  config.vm.boot_timeout = 1800
+  # https://atlas.hashicorp.com/vagrant
+  config.vm.box = "proxiblue/magemojo"
+
+  config.vm.provision "file", source: "./magento_nginx", destination: "/tmp/magento_nginx"
+  config.vm.provision "file", source: "./support_files", destination: "/tmp/support_files"
+  config.vm.provision "shell" do |s|
+      s.path = "bootstrap.sh"
+      s.args   = ["#{sync_images}", "#{single_site}"]
+  end
+  config.vm.provision "shell" do |s|
+      s.path = "install_logio.sh"
+  end
+  config.vm.network "private_network", ip: "192.168.50.2"
+  config.vm.network :forwarded_port, host_ip: "127.0.0.1", guest: 80, host: 80
+  config.vm.network :forwarded_port, host_ip: "127.0.0.1", guest: 3306, host: 3306
+
+  config.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=666"]
+  puts "using #{ssh_port} for ssh"
+  config.vm.network "forwarded_port", guest: 22, host_ip: "127.0.0.1", host: "#{ssh_port}", id: 'ssh', auto_correct: true
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "4096"]
+    vb.name = "#{hostname}"
+  end
+end
+

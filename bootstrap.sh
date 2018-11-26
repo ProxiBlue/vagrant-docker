@@ -1,5 +1,36 @@
 #!/bin/bash
 
+
+echo "==================== BOOTSTRAP ==========================="
+
+
+id -u seluser &>/dev/null || useradd seluser \
+         --shell /bin/bash  \
+         --create-home \
+  && usermod -a -G sudo seluser \
+  && echo 'ALL ALL = (ALL) NOPASSWD: ALL' >> /etc/sudoers \
+  && echo 'seluser:secret' | chpasswd
+echo "cd /vagrant/sites/" >> /home/vagrant/.bashrc
+cp /vagrant/nginx/* /etc/nginx/sites-enabled/
+cp /vagrant/self-signed.conf /etc/nginx/snippets/
+cp /vagrant/ssl-params.conf /etc/nginx/snippets/
+cp -xa /vagrant/ssl/* /etc/ssl/
+cp -xa /vagrant/php-fpm/www.conf.php7 /etc/php/7.1/fpm/pool.d/www.conf
+
+cp -xa /vagrant/php-fpm/* /etc/php/7.2/fpm/pool.d/
+[ -d /home/vagrant/.composer ] || mkdir /home/vagrant/.composer
+cp -xa /vagrant/auth.json /home/vagrant/.composer/auth.json
+chown vagrant:vagrant /home/vagrant/.composer -R
+sudo sed -i '/x-frame-options: DENY/d' /etc/nginx/snippets/ssl-params.conf
+
+# ref: https://www.scalix.com/wiki/index.php?title=Configuring_Sendmail_with_smarthost_Ubuntu_Gutsy
+cp -xa /vagrant/sendmail/* /etc/mail/
+echo "127.0.0.1 redis" >>/etc/hosts
+service sendmail restart
+echo "Setting correct permissions and ownership of all magento sites."
+sudo bash /vagrant/reset_permissions.sh
+
+
 /etc/init.d/mysqld start
 /etc/init.d/redis-server start
 
@@ -9,15 +40,6 @@ GRANT ALL PRIVILEGES ON *.* TO 'dev'@'localhost';
 FLUSH PRIVILEGES;
 MYSQL_SCRIPT
 
-cp -xav /tmp/magento_nginx/* /etc/nginx/
-cp -xav /tmp/magento_nginx/.htpasswd /etc/nginx/
-chown root:root /etc/nginx/ -R
-cp -xav /tmp/www.conf /etc/php5/fpm/pool.d/
-
-chown nginx:vagrant /vagrant/sites -R
-chmod 775 /vagrant/sites -R
-
-/etc/init.d/php54-php-fpm restart
 service nginx restart
 
 cd /vagrant/sites/ntotank
@@ -71,6 +93,3 @@ chmod 777 /vagrant/sites/pvcpipesupplies/var
 
 echo "cd /vagrant/sites" >> /home/vagrant/.bashrc
 echo "use: 'vagrant ssh' to ssh into server without a password"
-echo "SSH into vagrant and then run: bash /vagrant/init_droplets.sh"
-echo "Place into HOSTS file:"
-echo "IP OF DROPLET www.ntotank.dev www.sprayersupplies.dev www.protank.dev pvcpipesupplies.dev"

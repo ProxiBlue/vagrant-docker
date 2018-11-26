@@ -1,0 +1,15 @@
+#!/bin/sh
+
+IS_VAGRANT=`grep -q '^vagrant:' /etc/passwd && echo '1'`
+
+if [ "$IS_VAGRANT" = 1 ] ; then
+    echo "Detected inside vagrant..."
+    cd $GIT_DIR/..
+    composer install
+    npx gulp sass
+    git add -u ./docroot/.gitignore
+    git commit -n -m"Auto commit of ignores"
+elif [ "$3" = 1 ] ; then
+    echo "Detected inside host..."
+    vagrant ssh -c 'cd /vagrant/sites/enjo/; composer install; npx gulp sass; git add -u ./docroot/.gitignore; git commit -n -m"Auto commit of ignores due to branch change";'
+fi

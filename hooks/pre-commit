@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Prevent commits in live branch
+# ================================
+# See https://stackoverflow.com/questions/40462111/git-prevent-commits-in-master-branch
+BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+echo "BRANCH IS $BRANCH"
+
+if [ "$BRANCH" = "live" ]; then
+    echo
+    echo "You are on branch $BRANCH. Are you sure you want to commit to this branch?"
+    echo "The correct procedure is to create a feature branch, do your work there, the merge that branch back into live"
+    echo "If you must do a direct commit, commit with -n to bypass this pre-commit hook."	
+    echo
+    exit 1
+fi
+
+exit 0;

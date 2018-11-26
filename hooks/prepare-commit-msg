@@ -1,0 +1,41 @@
+#!/usr/bin/ruby
+
+# This git hook will prevent merging specific branches into master
+# Put this file in your local repo, in the .git/hooks folder
+# and make sure it is executable.
+# The name of the file *must* be "prepare-commit-msg" for Git to pick it up.
+
+FORBIDDEN_BRANCHES = ["uat"]
+
+def merge?
+  ARGV[1] == "merge"
+end
+
+def merge_msg
+  @msg ||= `cat .git/MERGE_MSG`
+end
+
+def from_branch
+  @from_branch = merge_msg.match(/Merge branch '(.*?)'/)[1]
+end
+
+def from_forbidden_branch?
+  FORBIDDEN_BRANCHES.include?(from_branch)
+end
+
+if merge? && from_forbidden_branch?
+  puts
+  puts " !!!!!!!!!!!!!!!!!! STOP STOP STOP !!!!!!!!!!!!!!!!"
+  puts
+  puts " You are trying to merge #{from_branch} into another branch. UAT can only be merged TO not FROM"
+  puts " Surely you don't mean that?"
+  puts 
+  puts " ===> You must run: "
+  puts " ===> git reset --merge"
+  puts " ===> NOW to eliminate this merge "	
+  puts
+  puts " ===> If you do want this (UAT to UAT?) run: git commit -m'Merged down UAT'"
+  puts
+  
+  exit 1
+end

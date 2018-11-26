@@ -1,29 +1,40 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+# Run with: vagrant up --provider=docker
+# to get a dns entry for the docker machines use DNSGUARD
+# Generate a random port number
+# fixes issue where two boxes try and map port 22.
+r = Random.new
+#d.image = "tknerr/baseimage-ubuntu:16.04"
+ssh_port = r.rand(1000...5000)
 
-hostname = "uptactics"
+Vagrant.configure('2') do |config|
+    config.vm.boot_timeout = 1800
 
-ssh_port = 2222
+    config.vm.network "private_network", type: "dhcp"
+    config.vm.network "forwarded_port", guest: 22, host: "#{ssh_port}", id: 'ssh', auto_correct: true
+    config.vm.network "forwarded_port", guest: 9222, host: 9222, protocol: "tcp"
+    config.vm.network "forwarded_port", guest: 9222, host: 9222, protocol: "udp"
+    config.vm.network "forwarded_port", guest: 3306, host: 3306, id: 'mysql'
+    config.vm.provision :shell, :path => "bootstrap.sh"
+    config.vm.provision :shell, :path => "environment.sh", run: "always", privileged: true
+    config.vm.provision :shell, :path => "ips.sh", run: "always", privileged: true
+    config.vm.provision :shell, :path => "services.sh", run: "always", privileged: true
+    config.vm.provision :shell, :path => "supportfiles.sh", run: "always", privileged: false
+    config.ssh.username = "vagrant"
+    config.ssh.password = "vagrant"
+    config.ssh.keys_only = false
+    config.vm.define "enjo" do |box|
+        box.vm.hostname = "enjo"
+        box.vm.provider 'docker' do |d|
+            d.image = "enjo/ubuntu-devbox:latest"
+            d.has_ssh = true
+            d.name = "enjo"
+            d.create_args = ["--cap-add=NET_ADMIN"]
+            d.env = { "DNSDOCK_IMAGE" => "enjo", "DNSDOCK_ALIAS" => "dummy" }
+            d.remains_running = true
+            d.volumes = ["/tmp/.X11-unix:/tmp/.X11-unix", ENV['HOME']+"/.ssh/:/home/vagrant/.ssh"]
+        end
+    end
 
-Vagrant.configure("2") do |config|
-  config.vm.boot_timeout = 1800
-  
-  config.vm.provision "file", source: "./magento_nginx", destination: "/tmp/magento_nginx"
-  config.vm.provision "file", source: "./www.conf", destination: "/tmp/www.conf"
-
-  config.vm.provision :shell, :path => "bootstrap.sh"
-  config.vm.provision :shell, :path => "services.sh", :run => "always"
-  config.vm.network :forwarded_port, guest: 80, host: 80
-  config.vm.network :forwarded_port, guest: 3306, host: 3306
-
-  config.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=777","fmode=666"]
-  puts "using #{ssh_port} for ssh"
-  config.vm.network "forwarded_port", guest: 22, host_ip: "127.0.0.1", host: "#{ssh_port}", id: 'ssh', auto_correct: true
-  config.vm.provider 'docker' do |d|
-      d.build_dir = "docker"
-      d.has_ssh = true
-      d.name = "uptactics"
-      d.remains_running = true
-  end
 end
-
