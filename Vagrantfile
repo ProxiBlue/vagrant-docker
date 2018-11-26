@@ -13,23 +13,23 @@ Vagrant.configure('2') do |config|
 
     config.vm.network "private_network", type: "dhcp"
     config.vm.network "forwarded_port", guest: 22, host: "#{ssh_port}", id: 'ssh', auto_correct: true
-    config.vm.network "forwarded_port", guest: 9222, host: 9222, protocol: "tcp"
-    config.vm.network "forwarded_port", guest: 9222, host: 9222, protocol: "udp"
-    config.vm.network "forwarded_port", guest: 3306, host: 3306, id: 'mysql'
-    config.vm.provision :shell, :path => "bootstrap.sh"
+    config.vm.network "forwarded_port", guest: 9222, host: 9223, protocol: "tcp"
+    config.vm.network "forwarded_port", guest: 9222, host: 9223, protocol: "udp"
+    config.vm.network "forwarded_port", guest: 3306, host: 3307, id: 'mysql'
     config.vm.provision :shell, :path => "environment.sh", run: "always", privileged: true
+    config.vm.provision :shell, :path => "bootstrap.sh", privileged: true
     config.vm.provision :shell, :path => "ips.sh", run: "always", privileged: true
     config.vm.provision :shell, :path => "services.sh", run: "always", privileged: true
-    config.vm.provision :shell, :path => "supportfiles.sh", run: "always", privileged: false
+    #config.vm.provision :shell, :path => "supportfiles.sh", run: "always", privileged: false
     config.ssh.username = "vagrant"
     config.ssh.password = "vagrant"
     config.ssh.keys_only = false
-    config.vm.define "enjo" do |box|
-        box.vm.hostname = "enjo"
+    config.vm.define "uptactics" do |box|
+        box.vm.hostname = "uptactics"
         box.vm.provider 'docker' do |d|
             d.image = "enjo/ubuntu-devbox:latest"
             d.has_ssh = true
-            d.name = "enjo"
+            d.name = "uptactics"
             d.create_args = ["--cap-add=NET_ADMIN"]
             d.env = { "DNSDOCK_IMAGE" => "enjo", "DNSDOCK_ALIAS" => "dummy" }
             d.remains_running = true

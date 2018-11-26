@@ -1,15 +1,11 @@
-map $http_host $storecode {
-    sante.enjo.test sante;
-    edemo.enjo.test edemo;
-}
 server {
     error_log /var/log/main_sites.log debug;
-    listen 172.17.0.10:80;
-    listen 172.17.0.10:443 ssl http2 default_server;
+    listen 172.17.0.100:80;
+    listen 172.17.0.100:443 ssl http2 default_server;
     include snippets/self-signed.conf;
     include snippets/ssl-params.conf;
-    server_name enjo.test;
-    root /vagrant/sites/enjo/docroot;
+    server_name ntotank;
+    root /vagrant/sites/ntotank;
     error_page 404 = /errors/404.php;
     error_page 503 = /errors/503.php;
     location ~ ^/(skin|js|media)/ {
@@ -44,14 +40,14 @@ server {
         if (!-e $request_filename) { rewrite / /index.php last; } ## Catch 404s that try_files miss
         expires        off; ## Do not cache dynamic content
        	include        fastcgi_params; ## See /etc/nginx/fastcgi_params
-        fastcgi_pass   unix:/run/php/php7.1-fpm-enjo.sock;
+        fastcgi_pass   unix:/run/php/php7.1-fpm-www.sock;
         #fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-	fastcgi_param DOCUMENT_ROOT $realpath_root;
-	fastcgi_param  MAGE_RUN_CODE $storecode;  ## Store code is defined in administration > Configuration > Manage Stores
+	    fastcgi_param DOCUMENT_ROOT $realpath_root;
+	    fastcgi_param  MAGE_RUN_CODE 'default';
         fastcgi_param  MAGE_RUN_TYPE website;
         fastcgi_param  SERVER_NAME $http_host;
-	fastcgi_param  MAGE_IS_DEVELOPER_MODE 1;
+	    fastcgi_param  MAGE_IS_DEVELOPER_MODE 1;
         fastcgi_read_timeout 300;
 
     }
@@ -60,10 +56,5 @@ server {
        try_files $uri $1.$3;
     }
 
-    if ($http_host = "sante.enjo.test") {
-     rewrite ^/robots.txt /robots-sante.txt break;
-    }
-
     disable_symlinks off;
-
 }
