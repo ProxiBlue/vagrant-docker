@@ -13,9 +13,6 @@ Vagrant.configure('2') do |config|
 
     config.vm.network "private_network", type: "dhcp"
     config.vm.network "forwarded_port", guest: 22, host: "#{ssh_port}", id: 'ssh', auto_correct: true
-    config.vm.network "forwarded_port", guest: 9222, host: 9223, protocol: "tcp"
-    config.vm.network "forwarded_port", guest: 9222, host: 9223, protocol: "udp"
-    config.vm.network "forwarded_port", guest: 3306, host: 3307, id: 'mysql'
     config.vm.provision :shell, :path => "environment.sh", run: "always", privileged: true
     config.vm.provision :shell, :path => "services.sh", run: "always", privileged: true
     config.vm.provision :shell, :path => "bootstrap.sh", privileged: true

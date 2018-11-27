@@ -38,65 +38,37 @@ GRANT ALL PRIVILEGES ON *.* TO 'dev'@'localhost';
 FLUSH PRIVILEGES;
 MYSQL_SCRIPT
 
-cd /vagrant/sites/ntotank
-git checkout live && git pull origin live
-dos2unix /vagrant/sites/ntotank/shell/*.sh
-cd app/etc
-if [ ! -L ./local.xml ] ; then
-        ln -s ./local.xml.dev ./local.xml
-        n98-magerun db:create
-        php /vagrant/sites/ntotank/shell/snapshot.php --fetch uat
-        bash /vagrant/sites/ntotank/shell/make_db_to_dev.sh
-fi
-cd ../..
-n98-magerun media:sync --mode=ssh --host=ssh-virginia-23.mojostratus.io --username=mediasync --port=20216
-bash /vagrant/reset_permissions.sh
-mkdir /vagrant/sites/ntotank/snapshot
-mkdir /vagrant/sites/ntotank/var
+function build_site {
+    echo "============== BUILDING $1 ============="
+    cd /vagrant/sites/$1
+    sudo -u vagrant git checkout live && sudo -u vagrant git pull origin live
+    dos2unix /vagrant/sites/$1/shell/*.sh
+    mkdir /vagrant/sites/$1/snapshot
+    cd app/etc
+    if [ ! -L ./local.xml ] ; then
+            ln -s ./local.xml.dev ./local.xml
+            sudo -u vagrant n98-magerun db:create
+            sudo -u vagrant php /vagrant/sites/$1/shell/snapshot.php --fetch uat
+    fi
+    sudo -u vagrant mkdir /vagrant/sites/$1/var
+    cd ../..
+    chmod 777 /root/.composer -R
+    sudo -u vagrant composer update
+    sudo -u vagrant bash /vagrant/sites/$1/shell/make_db_to_dev.sh
 
+    sudo -u vagrant cp -xav /vagrant/hooks/* /vagrant/sites/$1/.git/hooks/
+    chmod +x /vagrant/sites/$1/.git/hooks/post-checkout
+    chmod +x /vagrant/sites/$1/.git/hooks/pre-commit
+    chmod +x /vagrant/sites/$1/.git/hooks/prepare-commit-msg
+    echo "Setting permissions...."
+    bash /vagrant/reset_permissions.sh
+    echo "============== DONE $1 ============="
+}
 
-cp -xav /vagrant/hooks/* /vagrant/sites/ntotank/.git/hooks/
-chmod +x /vagrant/sites/ntotank/post-checkout
-chmod +x /vagrant/sites/ntotank/pre-commit
-chmod +x /vagrant/sites/ntotank/prepare-commit-msg
+declare -a arr=("ntotank" "protank")
 
+for site in "${arr[@]}"
+do
+  build_site ${site}
+done
 
-#cd /vagrant/sites/protank
-#dos2unix /vagrant/sites/protank/shell/*.sh
-#cd app/etc
-#if [ ! -L ./local.xml ] ; then
-#        ln -s ./local.xml.dev ./local.xml
-#        n98-magerun db:create
-#fi
-#mkdir /vagrant/sites/protank/snapshot
-#chmod 777 /vagrant/sites/protank/snapshot
-#mkdir /vagrant/sites/protank/var
-#chmod 777 /vagrant/sites/protank/var
-#
-#cd /vagrant/sites/sprayersupplies
-#dos2unix /vagrant/sites/sprayersupplies/shell/*.sh
-#cd app/etc
-#if [ ! -L ./local.xml ] ; then
-#        ln -s ./local.xml.dev ./local.xml
-#        n98-magerun db:create
-#fi
-#mkdir /vagrant/sites/sprayersupplies/snapshot
-#chmod 777 /vagrant/sites/sprayersupplies/snapshot
-#mkdir /vagrant/sites/sprayersupplies/var
-#chmod 777 /vagrant/sites/sprayersupplies/var
-#
-#cd /vagrant/sites/pvcpipesupplies
-#dos2unix /vagrant/sites/pvcpipesupplies/shell/*.sh
-#cd app/etc
-#if [ ! -L ./local.xml ] ; then
-#        ln -s ./local.xml.dev ./local.xml
-#        n98-magerun db:create
-#fi
-#mkdir /vagrant/sites/pvcpipesupplies/snapshot
-#chmod 777 /vagrant/sites/pvcpipesupplies/snapshot
-#
-#mkdir /vagrant/sites/pvcpipesupplies/var
-#chmod 777 /vagrant/sites/pvcpipesupplies/var
-#
-#echo "cd /vagrant/sites" >> /home/vagrant/.bashrc
-#echo "use: 'vagrant ssh' to ssh into server without a password"

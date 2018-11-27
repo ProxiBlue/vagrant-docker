@@ -11,7 +11,7 @@ Vagrant based development environment
 
 * Clone this repo: 
 
-```git clone --recursive git@github.com:uptactics/vagrant.git```
+```git clone -b docker --recursive git@github.com:uptactics/vagrant.git```
 
 *** This will checkout EVERYTHING - INCLUDES THE SITE CODE UNDER sites FOLDER
 
