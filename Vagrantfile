@@ -17,9 +17,9 @@ Vagrant.configure('2') do |config|
     config.vm.network "forwarded_port", guest: 9222, host: 9223, protocol: "udp"
     config.vm.network "forwarded_port", guest: 3306, host: 3307, id: 'mysql'
     config.vm.provision :shell, :path => "environment.sh", run: "always", privileged: true
+    config.vm.provision :shell, :path => "services.sh", run: "always", privileged: true
     config.vm.provision :shell, :path => "bootstrap.sh", privileged: true
     config.vm.provision :shell, :path => "ips.sh", run: "always", privileged: true
-    config.vm.provision :shell, :path => "services.sh", run: "always", privileged: true
     #config.vm.provision :shell, :path => "supportfiles.sh", run: "always", privileged: false
     config.ssh.username = "vagrant"
     config.ssh.password = "vagrant"

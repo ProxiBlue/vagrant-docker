@@ -31,30 +31,36 @@ cd /etc/mail/auth
 touch client-info.db
 makemap -r hash client-info.db < client-info
 service sendmail restart
-echo "Setting correct permissions and ownership of all magento sites."
-sudo bash /vagrant/reset_permissions.sh
+
+mysql -uroot <<MYSQL_SCRIPT
+CREATE USER 'dev'@'localhost' IDENTIFIED BY 'dev';
+GRANT ALL PRIVILEGES ON *.* TO 'dev'@'localhost';
+FLUSH PRIVILEGES;
+MYSQL_SCRIPT
+
+cd /vagrant/sites/ntotank
+git checkout live && git pull origin live
+dos2unix /vagrant/sites/ntotank/shell/*.sh
+cd app/etc
+if [ ! -L ./local.xml ] ; then
+        ln -s ./local.xml.dev ./local.xml
+        n98-magerun db:create
+        php /vagrant/sites/ntotank/shell/snapshot.php --fetch uat
+        bash /vagrant/sites/ntotank/shell/make_db_to_dev.sh
+fi
+cd ../..
+n98-magerun media:sync --mode=ssh --host=ssh-virginia-23.mojostratus.io --username=mediasync --port=20216
+bash /vagrant/reset_permissions.sh
+mkdir /vagrant/sites/ntotank/snapshot
+mkdir /vagrant/sites/ntotank/var
 
 
-#mysql -uroot <<MYSQL_SCRIPT
-#CREATE USER 'dev'@'localhost' IDENTIFIED BY 'dev';
-#GRANT ALL PRIVILEGES ON *.* TO 'dev'@'localhost';
-#FLUSH PRIVILEGES;
-#MYSQL_SCRIPT
-#
-#service nginx restart
-#
-#cd /vagrant/sites/ntotank
-#dos2unix /vagrant/sites/ntotank/shell/*.sh
-#cd app/etc
-#if [ ! -L ./local.xml ] ; then
-#        ln -s ./local.xml.dev ./local.xml
-#        n98-magerun db:create
-#fi
-#mkdir /vagrant/sites/ntotank/snapshot
-#chmod 777 /vagrant/sites/ntotank/snapshot
-#mkdir /vagrant/sites/ntotank/var
-#chmod 777 /vagrant/sites/ntotank/var
-#
+cp -xav /vagrant/hooks/* /vagrant/sites/ntotank/.git/hooks/
+chmod +x /vagrant/sites/ntotank/post-checkout
+chmod +x /vagrant/sites/ntotank/pre-commit
+chmod +x /vagrant/sites/ntotank/prepare-commit-msg
+
+
 #cd /vagrant/sites/protank
 #dos2unix /vagrant/sites/protank/shell/*.sh
 #cd app/etc
