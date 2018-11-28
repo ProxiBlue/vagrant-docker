@@ -1,10 +1,10 @@
 upstream fastcgi_backend {
-     server  unix:/run/php/php7.1-fpm-www.sock;
+     server  unix:/run/php/php7.2-fpm.sock;
  }
 
  server {
-     listen 80;
-     server_name pvcm2;
+     listen 172.17.0.123:80;
+     server_name pvcm2.{{DEV_DOMAIN}};
      set $MAGE_ROOT /vagrant/sites/pvcm2;
      include /vagrant/sites/pvcm2/nginx.conf.sample;
  }

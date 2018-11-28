@@ -1,4 +1,4 @@
 .vagrant
 .idea
 .DS_Store
-/sites/pvcm2
+/sites/*/*

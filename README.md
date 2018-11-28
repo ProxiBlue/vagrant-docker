@@ -5,7 +5,6 @@ Vagrant based development environment
 ## Requirements
 
 * Download and install Vagrant (https://www.vagrantup.com/)
-* Download and install VirtualBox (https://www.virtualbox.org/wiki/Downloads)
 
 ## Install
 
@@ -19,6 +18,17 @@ Vagrant based development environment
 
 ```cd vagrant```
 
+* set your DEV DOMAIN
+
+```export DEV_DOMAIN=uptactics.test```
+
+You can set this as a global ENVIRONMENT VARIABLE in your host OS
+If none set, will default to uptactics.test
+
+* bring up the DNS server
+
+
+
 * bring the server up 
 
 ```vagrant up```
@@ -30,10 +40,6 @@ That is it. The vagrant virtual machine will now boot
 * You can ssh to the vagrant box ussing:
 
 ```vagrant ssh```
-
-OR
-
-```ssh vagrant@192.168.50.2 using password 'tanks'```
 
 ## Site Code
 
@@ -71,11 +77,13 @@ This will need to be done after any ```vagrant destroy``` was used, or on intial
 ```cd shell```
 ```/bin/bash ./mage_db_to_dev.sh```
 
-## Setup HOST
+* sites wil be assigned IPS:
 
-* edit the host file, and place entries for each site into the hostfile
-
-```192.168.50.2 [SITE URL] [SITE URL] [SITE URL]```
+    * 172.17.0.100 : ntotank
+    * 172.17.0.111 : protank
+    * 172.17.0.121 : pvcpipesupplies
+    * 172.17.0.122 : sprayersupplies
+    * 172.17.0.123 : pvcm2
 
 * ensure all site urls are present
 
