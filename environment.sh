@@ -34,6 +34,5 @@ cd /etc/mail/auth
 touch client-info.db
 makemap -r hash client-info.db < client-info
 
-chmod +x /home/vagrant/git-completion.bash
 
 

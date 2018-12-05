@@ -2,3 +2,8 @@
 .idea
 .DS_Store
 /sites/*/*
+*.sql
+*~
+*.gz
+*.bz2
+Docker/*

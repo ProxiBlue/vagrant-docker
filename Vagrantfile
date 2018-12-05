@@ -8,9 +8,8 @@ puts "========================================================"
 puts "using #{dev_domain}"
 puts "========================================================"
 
-r = Random.new
 #d.image = "tknerr/baseimage-ubuntu:16.04"
-ssh_port = r.rand(1000...5000)
+ssh_port = 2223
 
 $set_environment_variables = <<SCRIPT
 tee "/home/vagrant/myvars.sh" > "/dev/null" <<EOF
