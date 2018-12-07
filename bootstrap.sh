@@ -39,7 +39,7 @@ function build_site {
 
 export COMPOSER_HOME=/home/vagrant/.composer
 
-declare -a arr=("ntotank")
+declare -a arr=("ntotank" "protank" "sprayersupplies" "pvcpipesupplies")
 
 for site in "${arr[@]}"
 do
