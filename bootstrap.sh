@@ -34,6 +34,8 @@ function build_site {
     chmod +x /vagrant/sites/$1/.git/hooks/prepare-commit-msg
     echo "Setting permissions...."
     sudo bash /vagrant/reset_permissions.sh
+    sudo rm -rf /vagrant/sites/$1/var/session/*
+    sudo chmod 777 /vagrant/sites/$1/var -R
     echo "============== DONE $1 ============="
 }
 
@@ -45,4 +47,5 @@ for site in "${arr[@]}"
 do
   build_site ${site}
 done
+
 

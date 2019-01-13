@@ -20,8 +20,8 @@ fi
 
 chown vagrant:www-data .* -R
 
-find . -type f \-exec chmod 644 {} \;
-find . -type d \-exec chmod 755 {} \;
+find . -not -iwholename '*.git*' -type f \-exec chmod 644 {} \;
+find . -not -iwholename '*.git*' -type d \-exec chmod 755 {} \;
 
 find ./var -type d \-exec chmod 777 {} \;
 find ./var -type f \-exec chmod 666 {} \;

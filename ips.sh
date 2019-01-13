@@ -28,5 +28,10 @@ ifconfig eth0:5 172.17.0.123/16 up
 #now inject that into the dnsdock
 curl -s http://$DNSDOCK/services/pvcm2 -X PUT --data-ascii '{"name": "pvcm2", "image": "pvcm2", "ip": "172.17.0.123", "ttl": 130}' 2>&1 >/dev/null
 
+ifconfig eth0:6 172.17.0.130/16 up
+#now inject that into the dnsdock
+curl -s http://$DNSDOCK/services/protankequipment -X PUT --data-ascii '{"name": "protankequipment", "image": "protankequipment", "ip": "172.17.0.130", "ttl": 130}' 2>&1 >/dev/null
+
+
 curl -s http://$DNSDOCK/services | python -m json.tool
 
