@@ -5,6 +5,9 @@ DNSDOCK=dnsdock.${DEV_DOMAIN}
 
 echo USING: $DNSDOCK
 
+echo "nameserver 172.17.0.1" >/etc/resolv.conf
+
+
 echo "==================== SETTING IPS ==========================="
 
 ifconfig eth0:1 172.17.0.100/16 up
