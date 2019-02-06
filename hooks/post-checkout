@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 IS_VAGRANT=`grep -q '^vagrant:' /etc/passwd && echo '1'`
 
