@@ -1,16 +1,18 @@
-#!/bin/sh
+#/bin/bash
 
 IS_VAGRANT=`grep -q '^vagrant:' /etc/passwd && echo '1'`
 
 if [ "$IS_VAGRANT" = 1 ] ; then
     echo "Detected inside vagrant..."
     cd $GIT_DIR/..
+    composer update
+    rm -rf ./vendor
     composer install
-    npx gulp sass
-    git add -u .gitignore
-    git commit -n -m"Auto commit of ignores"
+    bash ./buildGulp.sh
+    git add -u .gitignore ./composer.lock
+    git commit .gitignore ./composer.lock -n -m"Auto commit of ignores"
 elif [ "$3" = 1 ] ; then
     FOLDER=${PWD##*/}
-    echo "Detected inside host...on folder $FOLDER"
-    vagrant ssh -c "cd /vagrant/sites/${FOLDER}/; composer install; npx gulp sass; git add -u .gitignore; git commit -n -m'Auto commit of ignores due to branch change';"
+    echo "Detected inside host..."
+    vagrant ssh -c "cd /vagrant/sites/${FOLDER}/; composer update; rm -rf ./vendor; composer install; bash ./buildGulp.sh; git add -u .gitignore ./composer.lock; git commit .gitignore ./composer.lock -n -m'Auto commit of ignores due to branch change';"
 fi
