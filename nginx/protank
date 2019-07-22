@@ -4,7 +4,7 @@ server {
     listen 172.17.0.111:443 ssl http2 default_server;
     include snippets/self-signed.conf;
     include snippets/ssl-params.conf;
-    server_name protank.{{DEV_DOMAIN}};
+    server_name protank.${DEV_DOMAIN};
     root /vagrant/sites/protank;
     error_page 404 = /errors/404.php;
     error_page 503 = /errors/503.php;
