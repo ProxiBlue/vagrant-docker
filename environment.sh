@@ -12,7 +12,7 @@ id -u seluser &>/dev/null || useradd seluser \
   && echo 'ALL ALL = (ALL) NOPASSWD: ALL' >> /etc/sudoers \
   && echo 'seluser:secret' | chpasswd
 echo "cd /vagrant/sites/" >> /home/vagrant/.bashrc
-cp /vagrant/nginx/* /etc/nginx/sites-enabled/
+/bin/bash /vagrant/setnginxconf.sh
 sed -i 's/{{DEV_DOMAIN}}/'"$DEV_DOMAIN"'/g' /etc/nginx/sites-enabled/*
 
 cp /vagrant/self-signed.conf /etc/nginx/snippets/
