@@ -1,10 +1,10 @@
 #!/bin/bash
 
-source /home/vagrant/myvars.sh
+export DEV_DOMAIN=$1
 
-echo "DOMAIN IS ${DEV_DOMAIN}"
+echo "export DEV_DOMAIN=$1" > /home/vagrant/myvars.sh
+
 echo "nameserver `/sbin/ip route|awk '/default/ { print $3 }'`" >/etc/resolv.conf
-
 id -u seluser &>/dev/null || useradd seluser \
          --shell /bin/bash  \
          --create-home \
@@ -12,7 +12,9 @@ id -u seluser &>/dev/null || useradd seluser \
   && echo 'ALL ALL = (ALL) NOPASSWD: ALL' >> /etc/sudoers \
   && echo 'seluser:secret' | chpasswd
 echo "cd /vagrant/sites/" >> /home/vagrant/.bashrc
+
 /bin/bash /vagrant/setnginxconf.sh
+
 sed -i 's/{{DEV_DOMAIN}}/'"$DEV_DOMAIN"'/g' /etc/nginx/sites-enabled/*
 
 cp /vagrant/self-signed.conf /etc/nginx/snippets/
@@ -34,5 +36,23 @@ cd /etc/mail/auth
 touch client-info.db
 makemap -r hash client-info.db < client-info
 
+if [ ! -d /home/vagrant/.n98-magerun/modules ]; then
+    mkdir -p /home/vagrant/.n98-magerun/modules/
+    mkdir /home/vagrant/.n98-magerun/modules/
+    cd /home/vagrant/.n98-magerun/modules/
+    git clone https://github.com/peterjaap/magerun-addons.git pj-addons
+    chown vagrant:vagrant /home/vagrant/.n98-magerun -R
+fi
 
+if [ -f /tmp/magento ]; then
+    rm -rf /tmp/magento
+fi
+
+service php7.1-fpm start
+service php5.6-fpm start
+service php7.2-fpm start
+
+service nginx restart
+service redis-server restart
+#service sendmail restart
 

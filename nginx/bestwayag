@@ -1,7 +1,7 @@
 server {
     error_log /var/log/main_sites.log debug;
-    listen 172.17.0.140:80;
-    listen 172.17.0.140:443 ssl http2 default_server;
+    listen 80;
+    listen 443 ssl http2;
     include snippets/self-signed.conf;
     include snippets/ssl-params.conf;
     server_name bestwayag.${DEV_DOMAIN};

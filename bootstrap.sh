@@ -3,13 +3,6 @@
 
 echo "==================== BOOTSTRAP ==========================="
 
-sudo mysql -uroot <<MYSQL_SCRIPT
-CREATE USER 'dev'@'localhost' IDENTIFIED BY 'dev';
-GRANT ALL PRIVILEGES ON *.* TO 'dev'@'localhost';
-FLUSH PRIVILEGES;
-MYSQL_SCRIPT
-
-
 function build_site {
     echo "============== BUILDING $1 ============="
     cd /vagrant/sites/$1
