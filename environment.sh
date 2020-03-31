@@ -1,10 +1,13 @@
 #!/bin/bash
 
 export DEV_DOMAIN=$1
+export WEB_IP=$2
 
 echo "export DEV_DOMAIN=$1" > /home/vagrant/myvars.sh
 
-echo "nameserver `/sbin/ip route|awk '/default/ { print $3 }'`" >/etc/resolv.conf
+echo "nameserver 1.1.1.1" >/etc/resolv.conf
+echo "nameserver 8.8.8.8" >>/etc/resolv.conf
+
 id -u seluser &>/dev/null || useradd seluser \
          --shell /bin/bash  \
          --create-home \
@@ -30,11 +33,6 @@ chown vagrant:vagrant /home/vagrant/.composer -R
 sudo sed -i '/x-frame-options: DENY/d' /etc/nginx/snippets/ssl-params.conf
 
 # ref: https://www.scalix.com/wiki/index.php?title=Configuring_Sendmail_with_smarthost_Ubuntu_Gutsy
-cp -xa /vagrant/sendmail/* /etc/mail/
-echo "127.0.0.1 redis" >>/etc/hosts
-cd /etc/mail/auth
-touch client-info.db
-makemap -r hash client-info.db < client-info
 
 if [ ! -d /home/vagrant/.n98-magerun/modules ]; then
     mkdir -p /home/vagrant/.n98-magerun/modules/
