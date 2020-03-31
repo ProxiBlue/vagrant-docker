@@ -27,11 +27,18 @@ Vagrant.configure('2') do |config|
     config.hostmanager.include_offline = false
     config.vm.network "private_network", type: "dhcp"
     config.vm.network "forwarded_port", guest: 22, host: Random.new.rand(1000...5000), id: 'ssh', auto_correct: true
-    config.ssh.insert_key = false
+    config.trigger.after :up do |trigger|
+        trigger.run = {inline: "bash -c 'vagrant hostmanager --provider docker'"}
+    end
     config.vm.define "web", primary: true do |box|
-        box.hostmanager.aliases = [ "ntotank."+dev_domain, "bestwayag."+dev_domain, "sprayersupplies."+dev_domain, "pvcpipesupplies."+dev_domain,]
+        box.hostmanager.aliases = [ "ntotank."+dev_domain, "pvcpipesupplies."+dev_domain, "sprayersupplies."+dev_domain, "bestwayag."+dev_domain ]
         box.vm.network :private_network, ip: "#{ip_range}.200", subnet: "#{ip_range}.0/16"
         box.vm.hostname = "web#{dev_domain}"
+        box.ssh.insert_key = false
+        box.ssh.username = "vagrant"
+        box.ssh.password = "vagrant"
+        box.ssh.keys_only = false
+        box.vm.provision "shell", path: "services.sh", run: "always:", privileged: true
         box.vm.provision "shell" do |s|
             s.path = "environment.sh"
             s.args = "#{dev_domain} #{ip_range}.200"
@@ -56,17 +63,19 @@ Vagrant.configure('2') do |config|
         database.hostmanager.aliases = [ "database."+dev_domain ]
         database.vm.network :private_network, ip: "#{ip_range}.208", subnet: "#{ip_range}.0/16"
         database.vm.hostname = "database#{dev_domain}"
+        database.vm.communicator = 'docker'
         database.vm.provider 'docker' do |d|
             d.image = "mariadb:latest"
             d.has_ssh = false
             d.name = "database_#{dev_domain}"
             d.remains_running = true
-            #d.volumes = ["#{persistent_storage}/mysql:/var/lib/mysql"]
+            d.volumes = ["#{persistent_storage}/mysql:/var/lib/mysql"]
             d.env = { "MYSQL_ROOT_PASSWORD" => "#{mysql_password}" }
         end
     end
 
     config.vm.define "redis", primary: false do |redis|
+        redis.hostmanager.aliases = [ "redis."+dev_domain ]
         redis.vm.network :private_network, ip: "#{ip_range}.201", subnet: "#{ip_range}.0/16"
         redis.vm.hostname = "redis#{dev_domain}"
         redis.vm.communicator = 'docker'

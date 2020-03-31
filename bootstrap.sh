@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 echo "==================== BOOTSTRAP ==========================="
 
 function build_site {
