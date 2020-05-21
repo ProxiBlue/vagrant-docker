@@ -31,7 +31,7 @@ Vagrant.configure('2') do |config|
         trigger.run = {inline: "bash -c 'vagrant hostmanager --provider docker'"}
     end
     config.vm.define "web", primary: true do |box|
-        box.hostmanager.aliases = [ "ntotank."+dev_domain, "pvcpipesupplies."+dev_domain, "sprayersupplies."+dev_domain, "bestwayag."+dev_domain ]
+        box.hostmanager.aliases = [ "ntotank."+dev_domain, "pvcpipesupplies."+dev_domain, "sprayersupplies."+dev_domain, "bestwayag."+dev_domain, "protank."+dev_domain ]
         box.vm.network :private_network, ip: "#{ip_range}.200", subnet: "#{ip_range}.0/16"
         box.vm.hostname = "web#{dev_domain}"
         box.ssh.insert_key = false
