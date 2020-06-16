@@ -31,9 +31,12 @@ Vagrant based development environment
 You can set this as a global ENVIRONMENT VARIABLE in your host OS
 If none set, will default to uptactics.test
 
-* bring up the DNS server
+* you need to generate an ssh key that is on your host machine, and place the public key under the user 'mediasync' on all the magemojo server instances.
+If you skip this step, the database and images will not be able to fetch during bootstrap.
 
+* bring up the database instance first.
 
+    ** vagrant up database
 
 * bring the server up 
 
@@ -83,19 +86,6 @@ This will need to be done after any ```vagrant destroy``` was used, or on intial
 ```cd shell```
 ```/bin/bash ./mage_db_to_dev.sh```
 
-* sites wil be assigned IPS:
-
-    * 172.17.0.100 : ntotank
-    * 172.17.0.111 : protank
-    * 172.17.0.121 : pvcpipesupplies
-    * 172.17.0.122 : sprayersupplies
-    * 172.17.0.123 : pvcm2
-
-* ensure all site urls are present
-
-## Browse the sites
-
-You should now be able to browse to each site via your browser
 
 ## RESET ALL SITE / REDO BASE SETUP
 

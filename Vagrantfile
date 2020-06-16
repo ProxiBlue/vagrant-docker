@@ -30,34 +30,6 @@ Vagrant.configure('2') do |config|
     config.trigger.after :up do |trigger|
         trigger.run = {inline: "bash -c 'vagrant hostmanager --provider docker'"}
     end
-    config.vm.define "web", primary: true do |box|
-        box.hostmanager.aliases = [ "ntotank."+dev_domain, "pvcpipesupplies."+dev_domain, "sprayersupplies."+dev_domain, "bestwayag."+dev_domain, "protank."+dev_domain ]
-        box.vm.network :private_network, ip: "#{ip_range}.200", subnet: "#{ip_range}.0/16"
-        box.vm.hostname = "web#{dev_domain}"
-        box.ssh.insert_key = false
-        box.ssh.username = "vagrant"
-        box.ssh.password = "vagrant"
-        box.ssh.keys_only = false
-        box.vm.provision "shell", path: "services.sh", run: "always:", privileged: true
-        box.vm.provision "shell" do |s|
-            s.path = "environment.sh"
-            s.args = "#{dev_domain} #{ip_range}.200"
-            s.privileged = true
-        end
-        box.vm.provision "shell" do |s|
-            s.path = "bootstrap.sh"
-            s.args = "#{dev_domain}"
-            s.privileged = false
-        end
-        box.vm.provider 'docker' do |d|
-            d.image = "enjo/ubuntu-devbox:latest"
-            d.has_ssh = true
-            d.name = "web_#{dev_domain}"
-            d.create_args = ["--cap-add=NET_ADMIN"]
-            d.remains_running = true
-            d.volumes = ["/tmp/.X11-unix:/tmp/.X11-unix", ENV['HOME']+"/.ssh/:/home/vagrant/.ssh"]
-        end
-    end
 
     config.vm.define "database", primary: false do |database|
         database.hostmanager.aliases = [ "database."+dev_domain ]
@@ -84,6 +56,35 @@ Vagrant.configure('2') do |config|
             d.has_ssh = false
             d.name = "redis_#{dev_domain}"
             d.remains_running = true
+        end
+    end
+
+    config.vm.define "web", primary: true do |box|
+        box.hostmanager.aliases = [ "ntotank."+dev_domain, "pvcpipesupplies."+dev_domain, "sprayersupplies."+dev_domain, "bestwayag."+dev_domain, "protank."+dev_domain ]
+        box.vm.network :private_network, ip: "#{ip_range}.200", subnet: "#{ip_range}.0/16"
+        box.vm.hostname = "web#{dev_domain}"
+        box.ssh.insert_key = false
+        box.ssh.username = "vagrant"
+        box.ssh.password = "vagrant"
+        box.ssh.keys_only = false
+        box.vm.provision "shell", path: "services.sh", run: "always:", privileged: true
+        box.vm.provision "shell" do |s|
+            s.path = "environment.sh"
+            s.args = "#{dev_domain} #{ip_range}.200"
+            s.privileged = true
+        end
+        box.vm.provision "shell" do |s|
+            s.path = "bootstrap.sh"
+            s.args = "#{dev_domain}"
+            s.privileged = false
+        end
+        box.vm.provider 'docker' do |d|
+            d.image = "enjo/ubuntu-devbox:latest"
+            d.has_ssh = true
+            d.name = "web_#{dev_domain}"
+            d.create_args = ["--cap-add=NET_ADMIN"]
+            d.remains_running = true
+            d.volumes = ["/tmp/.X11-unix:/tmp/.X11-unix", ENV['HOME']+"/.ssh/:/home/vagrant/.ssh"]
         end
     end
 
