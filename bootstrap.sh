@@ -33,12 +33,12 @@ function build_site {
 
 export COMPOSER_HOME=/home/vagrant/.composer
 
-declare -a arr=("ntotank" "protank" "sprayersupplies" "pvcpipesupplies" "bestwayag")
+#declare -a arr=("ntotank" "protank" "sprayersupplies" "pvcpipesupplies" "bestwayag")
 
-for site in "${arr[@]}"
-do
-  build_site ${site}
-done
+#for site in "${arr[@]}"
+#do
+#  build_site ${site}
+#done
 
 #export PHP_IDE_CONFIG="serverName=broker.biz"
 

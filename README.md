@@ -34,13 +34,10 @@ If none set, will default to uptactics.test
 * you need to generate an ssh key that is on your host machine, and place the public key under the user 'mediasync' on all the magemojo server instances.
 If you skip this step, the database and images will not be able to fetch during bootstrap.
 
-* bring up the database instance first.
-
-    ** vagrant up database
 
 * bring the server up 
 
-```vagrant up```
+```vagrant up --no-parallel```
 
 That is it. The vagrant virtual machine will now boot
 
