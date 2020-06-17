@@ -39,11 +39,11 @@ If you skip this step, the database and images will not be able to fetch during 
 
 ```vagrant up --no-parallel```
 
-That is it. The vagrant virtual machine will now boot
+The vagrant virtual machine will now boot.
 
 ## Access
 
-* You can ssh to the vagrant box ussing:
+* You can ssh to the vagrant box using:
 
 ```vagrant ssh```
 
@@ -54,11 +54,89 @@ Files are stored here:
 ```/vagrant/sites``` (from within the VM after you ssh'd into vm)
 ```./sites``` (from within the folder you had cloned at the start of this process)
 
-## Boostrap (initial vagrant up after a vagrant destroy / first time run)
+## Setup Sites.
 
-* The VM build process will create the initial local.xml files (located in /sites/[magento root]/app/etc) for you. 
-  This file is a symlink to local.xml.dev
-* If the local.xml file does not exist, it will also create the database for each site (as noted in the the lcoal.xml file) 
+For each of the sites, you must perform the following actions:
+
+1. Setup the git branch hooks
+
+Located in ```/vagrant/sites/ntotank/.git/hooks``` folder are commit hooks that need to be copied to each of the git repos hooks folders.
+Replace any existing files.
+Make sure they are set to be executable.
+
+```
+cd sites/ntotank/
+cp -xav /vagrant/sites/ntotank/.git/hooks/* ./.git/hooks/
+chmod +x ./.git/hooks/post-checkout && chmod +x ./.git/hooks/pre-commit
+```
+2. run : bash ./clean-ignores.sh from the root of teh site (example sites/ntotank)
+
+This will update the composer files and install all composer packages
+This will re-populate the .gitignore files
+
+This may cause changes to composer.lock. That is expected, and can be re-committed back into repo at any point.
+
+3. Setup each site local.xml
+
+inside app/etc symlink local.xml.dev to local.xml
+
+4. Setup magemojo admin logins
+
+Login to magemojo admin, and setup your SSH login.
+You need to add an account for ssh login, with SSH key, and then add your fixed ip to the whitelist.
+You also need to setup your ssh key against the user 'mediasync'
+
+4. Pull down database
+
+run: ```php ./shell/snapshot.php --fetch live```
+
+if you see output like this:
+
+```
+Extracting structure...
+ssh_exchange_identification: Connection closed by remote host
+ssh_exchange_identification: Connection closed by remote host
+ssh_exchange_identification: read: Connection reset by peer
+
+```
+
+then you don't have SSH access, whitelist is not setup
+
+If all goes well, your DB will pull down, and import.
+
+run:
+
+```cd shell```
+```/bin/bash ./mage_db_to_dev.sh```
+
+to adjust db to dev
+
+## Ensure all services are running
+
+Run: ```sudo bash /vagrant/services.sh```
+
+You may need to do that command if the vagrant environment is stopped/started.
+You can run this at any time if nginx is not running.
+
+You should be able to access all sites now.
+
+```
+## vagrant-hostmanager-start
+172.22.0.201	redisuptactics.test
+172.22.0.201	redis.uptactics.test
+172.22.0.208	databaseuptactics.test
+172.22.0.208	database.uptactics.test
+172.22.0.200	webuptactics.test
+172.22.0.200	ntotank.uptactics.test
+172.22.0.200	pvcpipesupplies.uptactics.test
+172.22.0.200	sprayersupplies.uptactics.test
+172.22.0.200	bestwayag.uptactics.test
+172.22.0.200	protank.uptactics.test
+
+```
+
+The system will keep your hosts files up-to-date
+
 
 ## Site Database setups
 
@@ -82,19 +160,6 @@ This will need to be done after any ```vagrant destroy``` was used, or on intial
 
 ```cd shell```
 ```/bin/bash ./mage_db_to_dev.sh```
-
-
-## RESET ALL SITE / REDO BASE SETUP
-
-At anytime, if you feel the sites require a kick to rehash something, run the *provisioning* via vagrant, or if you had wiped a sites folder, and re-cloned the entire site from github.
-
-cd to the top level vagrant folder```
-run the commands: 
-
-```vagrant halt```
-```vagrant up --provision```
-
-All build of sites will run.
 
 *this will not destroy the dbs* so there is no need to re-run the db setup scripts, but it will not cause an issue if you do.
 
