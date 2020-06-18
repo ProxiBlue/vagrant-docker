@@ -64,15 +64,20 @@ Located in ```/vagrant/sites/ntotank/.git/hooks``` folder are commit hooks that 
 Replace any existing files.
 Make sure they are set to be executable.
 
+You must be inside vagrant having used ```vagrant ssh``` to run these commands.
+
 ```
 cd sites/ntotank/
-cp -xav /vagrant/sites/ntotank/.git/hooks/* ./.git/hooks/
+cp -xav /vagrant/hooks/* ./.git/hooks/
 chmod +x ./.git/hooks/post-checkout && chmod +x ./.git/hooks/pre-commit
 ```
-2. run : bash ./clean-ignores.sh from the root of teh site (example sites/ntotank)
+
+2. run : bash ./clean-ignores.sh from the root of thE site (example ```sites/ntotank```)
 
 This will update the composer files and install all composer packages
 This will re-populate the .gitignore files
+
+You will need auth files for composer auth. Sent to you separate to this readme.
 
 This may cause changes to composer.lock. That is expected, and can be re-committed back into repo at any point.
 
