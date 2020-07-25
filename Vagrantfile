@@ -88,4 +88,26 @@ Vagrant.configure('2') do |config|
         end
     end
 
+    config.vm.define "parts", primary: true do |box|
+        box.hostmanager.aliases = [ "parts."+dev_domain ]
+        box.vm.network :private_network, ip: "#{ip_range}.250", subnet: "#{ip_range}.0/16"
+        box.vm.hostname = "parts#{dev_domain}"
+        box.vm.communicator = 'docker'
+        box.vm.provision "shell", path: "services.sh", run: "always:", privileged: true
+        box.vm.provision "shell" do |s|
+            s.path = "environment.sh"
+            s.args = "#{dev_domain} #{ip_range}.250"
+            s.privileged = true
+        end
+        box.vm.provider 'docker' do |d|
+            d.build_dir = "#{vagrant_root}/docker/parts"
+            d.dockerfile = "Dockerfile"
+            d.has_ssh = true
+            d.name = "parts_#{dev_domain}"
+            d.create_args = ["--cap-add=NET_ADMIN"]
+            d.remains_running = true
+            d.volumes = ["#{vagrant_root}/sites/Bestwaysalesllc:/project", "/tmp/.X11-unix:/tmp/.X11-unix", ENV['HOME']+"/.ssh/:/home/vagrant/.ssh"]
+        end
+    end
+
 end

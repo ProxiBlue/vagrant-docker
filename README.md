@@ -68,9 +68,28 @@ You must be inside vagrant having used ```vagrant ssh``` to run these commands.
 
 ```
 cd sites/ntotank/
+```
+
+Check if ```.git``` is a folder. If a folder do the steps below:
+
+```
 cp -xav /vagrant/hooks/* ./.git/hooks/
 chmod +x ./.git/hooks/post-checkout && chmod +x ./.git/hooks/pre-commit
 ```
+
+If a file: do ```cat .git```
+You will get a result like : ```gitdir: ../../.git/modules/sites/ntotank```
+
+you need to  make the destination that folder as such:
+
+```
+cp -xav /vagrant/hooks/* ../../.git/modules/sites/ntotank/hooks/
+chmod +x ../../.git/modules/sites/ntotank/hooks/post-checkout  && chmod +x ../../.git/modules/sites/ntotank/hooks/pre-commit
+```
+
+You must do this for all sites.
+
+IP must be setup to access satis
 
 2. run : bash ./clean-ignores.sh from the root of thE site (example ```sites/ntotank```)
 
