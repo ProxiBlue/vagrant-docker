@@ -4,8 +4,8 @@ server {
     listen 443 ssl http2;
     include snippets/self-signed.conf;
     include snippets/ssl-params.conf;
-    server_name protank.uptactics.test;
-    root /vagrant/sites/protank;
+    server_name openmage.uptactics.test;
+    root /vagrant/sites/openmage;
     error_page 404 = /errors/404.php;
     error_page 503 = /errors/503.php;
     location ~ ^/(skin|js|media)/ {

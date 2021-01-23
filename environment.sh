@@ -4,6 +4,7 @@ export DEV_DOMAIN=$1
 export WEB_IP=$2
 
 echo "export DEV_DOMAIN=$1" > /home/vagrant/myvars.sh
+echo "export WEB_IP=$2" >> /home/vagrant/myvars.sh
 
 echo "nameserver 1.1.1.1" >/etc/resolv.conf
 echo "nameserver 8.8.8.8" >>/etc/resolv.conf

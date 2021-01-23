@@ -1,10 +1,10 @@
 server {
     error_log /var/log/main_sites.log debug;
-    listen ${WEB_IP}:80;
-    listen ${WEB_IP}:443 ssl http2;
+    listen 80;
+    listen 443 ssl http2;
     include snippets/self-signed.conf;
     include snippets/ssl-params.conf;
-    server_name sprayersupplies.${DEV_DOMAIN};
+    server_name sprayersupplies.uptactics.test;
     root /vagrant/sites/sprayersupplies;
     error_page 404 = /errors/404.php;
     error_page 503 = /errors/503.php;
