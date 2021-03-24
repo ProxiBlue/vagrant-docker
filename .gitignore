@@ -8,3 +8,4 @@
 *.bz2
 Docker/*
 persistent_storage/
+sites/

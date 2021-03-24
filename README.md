@@ -1,194 +1,78 @@
-# vagrant
-
-Vagrant based development environment
-
-## Requirements
+# Vagrant M2 development environment
 
 ## Requirements
 
 * Vagrant 2.2.5 or greater (important, will not work with older vagrant versions)
 * Docker 18.09.7 or greater
 * vagrant plugin: https://github.com/devopsgroup-io/vagrant-hostmanager
-* vagrant plugin: ```vagrant plugin install docker-api```
+* vagrant plugin: vagrant plugin install docker-api
 * vagrant plugin: https://github.com/ProxiBlue/vagrant-communicator-docker
 
-## Install
+## Required environment variables:
 
-* Clone this repo: 
+* DEV_DOMAIN : The domain that vagrant instances will use
+* MYSQL_ROOT_PASSWORD : password to use as root for database (optional - defaults to: root)
+* PERSISTENT_STORAGE : Path on your HOST where data will save for persistence. example mysql, elaticsearch
 
-```git clone -b docker --recursive git@github.com:uptactics/vagrant.git```
+## Layout / Structure
 
-*** This will checkout EVERYTHING - INCLUDES THE SITE CODE UNDER sites FOLDER
+The environment starts up multiple Docker instances, for magento 2 and vueStorefront, with known fixed ips You can set the base IP range in teh Vagrant file. example: ip_range = "172.20.0"
 
-* cd into the new folder (called vagrant) 
+* magento : IP_RANGE.200
+* redis : IP_RANGE.201
+* elasticsearch : IP_RANGE.202
+* database : IP_RANGE.208
 
-```cd vagrant```
+etc
 
-* set your DEV DOMAIN
+You can add as many other services instances to the environment, by simply adding in more vagrant multi machine box config directives
+Ensure you set the IP as UNIQUE to each: ```magento.vm.network :private_network, ip: "#{ip_range}.200", subnet: "#{ip_range}.0/16"```
 
-```export DEV_DOMAIN=uptactics.test```
+## Setup
 
-You can set this as a global ENVIRONMENT VARIABLE in your host OS
-If none set, will default to uptactics.test
+* At the top of the vagrant file, edit, or set appropriate env vars prior to start:
 
-* you need to generate an ssh key that is on your host machine, and place the public key under the user 'mediasync' on all the magemojo server instances.
-If you skip this step, the database and images will not be able to fetch during bootstrap.
+  * dev_domain = ENV['DEV_DOMAIN'] || 'local.test'
+  * mysql_password = ENV['MYSQL_ROOT_PASSWORD'] || "root"
+  * mode = ENV['VAGRANT_MODE'] || 'dev'
+  * ip_range = ENV['DEV_IP_RANGE'] || "172.24.0"
+  * dev_suffix = ENV['DEV_SUFFIX'] || "local"
 
+* Edit the Vagrant config for machine 'web' 
 
-* bring the server up 
+Set the site domains you want to use in var ```box.hostmanager.aliases```
+Example: if you are working on shoeshop.com and coffeeshop.com then set: ```box.hostmanager.aliases = [ "shoeshop."+dev_domain, "coffeeshop."+dev_domain ]```
+ 
+These site will exist in the ```sites``` folder, as complete magento 2 websites.
+It is thus possible to manage multiple sites.
+
+Example
+
+```sites/shoeshop```
+```sites/coffeeshop```
+
+* Next you need to setup the needed nginx vhost entry for each site. 
+You can use the template aptly named ```template```, and located inside teh nginx folder. 
+Create your nginx vhost files here:
+
+```
+cp template ./shoeshop
+```
+
+then edit adn replace ```____SITE____``` with folder name and name of hostname setup in steps above (Generally, it makes sense to keep the naming consistent)
+
+* Now, run : 
+
+```
+vagrant ssh
+bash /vagrant/setnginxconf.sh
+``` 
+
+* start environment
 
 ```vagrant up --no-parallel```
 
-The vagrant virtual machine will now boot.
+Can run GUI apps on HOST:
 
-## Access
-
-* You can ssh to the vagrant box using:
-
-```vagrant ssh```
-
-## Site Code
-
-Files are stored here: 
-
-```/vagrant/sites``` (from within the VM after you ssh'd into vm)
-```./sites``` (from within the folder you had cloned at the start of this process)
-
-## Setup Sites.
-
-For each of the sites, you must perform the following actions:
-
-1. Setup the git branch hooks
-
-Located in ```/vagrant/sites/ntotank/.git/hooks``` folder are commit hooks that need to be copied to each of the git repos hooks folders.
-Replace any existing files.
-Make sure they are set to be executable.
-
-You must be inside vagrant having used ```vagrant ssh``` to run these commands.
-
-```
-cd sites/ntotank/
-```
-
-Check if ```.git``` is a folder. If a folder do the steps below:
-
-```
-cp -xav /vagrant/hooks/* ./.git/hooks/
-chmod +x ./.git/hooks/post-checkout && chmod +x ./.git/hooks/pre-commit
-```
-
-If a file: do ```cat .git```
-You will get a result like : ```gitdir: ../../.git/modules/sites/ntotank```
-
-you need to  make the destination that folder as such:
-
-```
-cp -xav /vagrant/hooks/* ../../.git/modules/sites/ntotank/hooks/
-chmod +x ../../.git/modules/sites/ntotank/hooks/post-checkout  && chmod +x ../../.git/modules/sites/ntotank/hooks/pre-commit
-```
-
-You must do this for all sites.
-
-IP must be setup to access satis
-
-2. run : bash ./clean-ignores.sh from the root of thE site (example ```sites/ntotank```)
-
-This will update the composer files and install all composer packages
-This will re-populate the .gitignore files
-
-You will need auth files for composer auth. Sent to you separate to this readme.
-
-This may cause changes to composer.lock. That is expected, and can be re-committed back into repo at any point.
-
-3. Setup each site local.xml
-
-inside app/etc symlink local.xml.dev to local.xml
-
-4. Setup magemojo admin logins
-
-Login to magemojo admin, and setup your SSH login.
-You need to add an account for ssh login, with SSH key, and then add your fixed ip to the whitelist.
-You also need to setup your ssh key against the user 'mediasync'
-
-4. Pull down database
-
-run: ```php ./shell/snapshot.php --fetch live```
-
-if you see output like this:
-
-```
-Extracting structure...
-ssh_exchange_identification: Connection closed by remote host
-ssh_exchange_identification: Connection closed by remote host
-ssh_exchange_identification: read: Connection reset by peer
-
-```
-
-then you don't have SSH access, whitelist is not setup
-
-If all goes well, your DB will pull down, and import.
-
-run:
-
-```cd shell```
-```/bin/bash ./mage_db_to_dev.sh```
-
-to adjust db to dev
-
-## Ensure all services are running
-
-Run: ```sudo bash /vagrant/services.sh```
-
-You may need to do that command if the vagrant environment is stopped/started.
-You can run this at any time if nginx is not running.
-
-You should be able to access all sites now.
-
-```
-## vagrant-hostmanager-start
-172.22.0.201	redisuptactics.test
-172.22.0.201	redis.uptactics.test
-172.22.0.208	databaseuptactics.test
-172.22.0.208	database.uptactics.test
-172.22.0.200	webuptactics.test
-172.22.0.200	ntotank.uptactics.test
-172.22.0.200	pvcpipesupplies.uptactics.test
-172.22.0.200	sprayersupplies.uptactics.test
-172.22.0.200	bestwayag.uptactics.test
-172.22.0.200	protank.uptactics.test
-
-```
-
-The system will keep your hosts files up-to-date
-
-
-## Site Database setups
-
-This will need to be done after any ```vagrant destroy``` was used, or on intial setup, after ```vagrant up``` was used. 
-
-* By whatever means you are comfortable with, create SQL dumps of each site (from live, uat etc)
-* Download those from the remote servers, and place each into the ```sites[magento root]``` folder, obviously matching each    to the given site + dump file
-
-* Now ssh into the vagrant VM using 
-
-```vagrant ssh```
-
-* cd to each site folder, and initiate a db import, for example, to import NTOTANK
-
-```cd /vagrant/sites/ntotank```
-```n98-magerun db:import ./dataBasedump.sql```
-
-(If you get an error of database not existing, use ```n98-magerun db:create``` to create the db)
-
-* next run the database migrate scripts
-
-```cd shell```
-```/bin/bash ./mage_db_to_dev.sh```
-
-*this will not destroy the dbs* so there is no need to re-run the db setup scripts, but it will not cause an issue if you do.
-
-
-
-
-
-
+* export DISPLAY=:0 && google-chrome --no-sandbox
+    

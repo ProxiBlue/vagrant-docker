@@ -1,3 +1,11 @@
-# Docker Devbox
+# Docker Based DevBox
 
-Used across environments to build, deploy and develop
+Includes common dev tools used in daily tasks
+
+## Includes : 
+
+* Element
+* Terraform 
+* ngrok
+* php 7.2 -> 7.3 as FPM + CLI
+* nginx 
